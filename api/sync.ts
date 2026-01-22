@@ -6,20 +6,31 @@ export const config = {
 };
 
 export default async function handler(req: Request) {
-  const databaseUrl = process.env.DATABASE_URL;
+  let databaseUrl = process.env.DATABASE_URL;
 
   if (!databaseUrl) {
     return new Response(JSON.stringify({ 
-      error: 'Variável de ambiente DATABASE_URL não encontrada. Certifique-se de configurá-la no painel da Vercel com a Connection String do Neon.' 
+      error: 'Variável de ambiente DATABASE_URL não encontrada.' 
     }), { 
       status: 500,
       headers: { 'Content-Type': 'application/json' }
     });
   }
 
-  const sql = neon(databaseUrl);
+  // Sanitização da URL: Remove o comando 'psql', aspas simples/duplas e espaços extras
+  databaseUrl = databaseUrl.trim();
+  
+  // Remove o prefixo 'psql ' se existir
+  if (databaseUrl.startsWith('psql ')) {
+    databaseUrl = databaseUrl.replace(/^psql\s+/, '');
+  }
+  
+  // Remove aspas simples ou duplas ao redor da URL
+  databaseUrl = databaseUrl.replace(/^['"](.*)['"]$/, '$1').trim();
 
   try {
+    const sql = neon(databaseUrl);
+
     // Inicialização da Tabela se não existir
     await sql`
       CREATE TABLE IF NOT EXISTS natsumi_expenses (
@@ -62,7 +73,6 @@ export default async function handler(req: Request) {
     if (req.method === 'POST') {
       const { expenses, revenue } = await req.json();
 
-      // Sync completo: Limpa e reinsere para garantir integridade do estado global
       await sql`DELETE FROM natsumi_expenses`;
       
       if (expenses && expenses.length > 0) {
@@ -86,7 +96,9 @@ export default async function handler(req: Request) {
     return new Response('Method Not Allowed', { status: 405 });
   } catch (error: any) {
     console.error('Database Error:', error);
-    return new Response(JSON.stringify({ error: error.message }), { 
+    return new Response(JSON.stringify({ 
+      error: 'Erro de conexão: Certifique-se de que a DATABASE_URL no painel da Vercel contém apenas a URL do banco (sem o comando psql).' 
+    }), { 
       status: 500,
       headers: { 'Content-Type': 'application/json' }
     });
