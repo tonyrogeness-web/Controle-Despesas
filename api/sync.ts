@@ -6,9 +6,9 @@ export const config = {
 };
 
 export default async function handler(req: Request) {
-  let databaseUrl = process.env.DATABASE_URL;
+  const rawDatabaseUrl = process.env.DATABASE_URL;
 
-  if (!databaseUrl) {
+  if (!rawDatabaseUrl) {
     return new Response(JSON.stringify({ 
       error: 'Variável de ambiente DATABASE_URL não encontrada.' 
     }), { 
@@ -17,16 +17,20 @@ export default async function handler(req: Request) {
     });
   }
 
-  // Sanitização da URL: Remove o comando 'psql', aspas simples/duplas e espaços extras
-  databaseUrl = databaseUrl.trim();
+  // Extração via Regex: Procura apenas pelo padrão da URL (postgresql://...) 
+  // e ignora o comando 'psql', aspas e outros caracteres ao redor.
+  const urlMatch = rawDatabaseUrl.match(/(postgres(?:ql)?:\/\/[^\s'"]+)/);
   
-  // Remove o prefixo 'psql ' se existir
-  if (databaseUrl.startsWith('psql ')) {
-    databaseUrl = databaseUrl.replace(/^psql\s+/, '');
+  if (!urlMatch) {
+    return new Response(JSON.stringify({ 
+      error: 'Formato de DATABASE_URL inválido. A string deve conter uma URL válida começando com postgresql://' 
+    }), { 
+      status: 500,
+      headers: { 'Content-Type': 'application/json' }
+    });
   }
-  
-  // Remove aspas simples ou duplas ao redor da URL
-  databaseUrl = databaseUrl.replace(/^['"](.*)['"]$/, '$1').trim();
+
+  const databaseUrl = urlMatch[0];
 
   try {
     const sql = neon(databaseUrl);
@@ -97,7 +101,7 @@ export default async function handler(req: Request) {
   } catch (error: any) {
     console.error('Database Error:', error);
     return new Response(JSON.stringify({ 
-      error: 'Erro de conexão: Certifique-se de que a DATABASE_URL no painel da Vercel contém apenas a URL do banco (sem o comando psql).' 
+      error: 'Erro de conexão: Verifique se a DATABASE_URL no painel da Vercel está correta.' 
     }), { 
       status: 500,
       headers: { 'Content-Type': 'application/json' }

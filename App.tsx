@@ -1,3 +1,4 @@
+
 import React, { useState, useMemo, useEffect, useCallback, useRef } from 'react';
 import { Expense, ExpenseStatus, SummaryData } from './types';
 import { INITIAL_EXPENSES, CATEGORIES as INITIAL_CATEGORIES } from './constants';
@@ -632,7 +633,8 @@ const App: React.FC = () => {
                             {pieData.map((entry, index) => <Cell key={`cell-${index}`} fill={CHART_COLORS[index % CHART_COLORS.length]} stroke="rgba(0,0,0,0.5)" strokeWidth={2} />)}
                           </Pie>
                           <Tooltip content={<CustomPieTooltip />} />
-                          <Legend verticalAlign="bottom" wrapperStyle={{ paddingTop: '10px', fontSize: '9px' }} />
+                          {/* Fix: Object literal may only specify known properties, and 'md' does not exist in type 'Properties'. Adjusted fontWeight and fontSize for valid CSS and responsive behavior. */}
+                          <Legend verticalAlign="bottom" height={36} wrapperStyle={{ color: '#fff', fontWeight: 900, textTransform: 'uppercase', fontSize: window.innerWidth < 768 ? '8px' : '10px' }} />
                         </PieChart>
                       </ResponsiveContainer>
                     </div>
