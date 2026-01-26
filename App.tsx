@@ -340,7 +340,7 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#1c1c1c] text-zinc-300 pb-20 selection:bg-emerald-500/30">
+    <div className="min-h-screen bg-[#292929] text-zinc-300 pb-20 selection:bg-emerald-500/30">
       <div className="fixed inset-0 opacity-[0.03] pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]"></div>
 
       {expandedChart && (
@@ -360,7 +360,7 @@ const App: React.FC = () => {
                       {pieData.map((entry, index) => <Cell key={`cell-${index}`} fill={CHART_COLORS[index % CHART_COLORS.length]} stroke="rgba(0,0,0,0.6)" strokeWidth={3} />)}
                     </Pie>
                     <Tooltip content={<CustomPieTooltip />} />
-                    <Legend verticalAlign="bottom" height={36} wrapperStyle={{ color: '#fff', fontWeight: 'black', textTransform: 'uppercase', fontSize: '8px', md: '10px' }} />
+                    <Legend verticalAlign="bottom" height={36} wrapperStyle={{ color: '#fff', fontWeight: '900', textTransform: 'uppercase', fontSize: window.innerWidth < 768 ? '10px' : '14px' }} />
                   </PieChart>
                 </ResponsiveContainer>
               ) : (
@@ -479,9 +479,9 @@ const App: React.FC = () => {
             </div>
           </div>
 
-          <div className="flex items-center bg-zinc-900/80 p-1 rounded-2xl border-2 border-white/5 shadow-inner w-full lg:w-auto justify-center">
-            <button onClick={() => setCurrentView('current')} className={`flex-1 lg:flex-none px-4 md:px-10 py-2.5 md:py-3 rounded-xl text-[10px] md:text-[12px] font-black uppercase tracking-[0.1em] transition-all flex items-center justify-center gap-2 md:gap-3 bubble-btn ${currentView === 'current' ? 'bg-emerald-500 text-black shadow-xl ring-2 ring-emerald-400/50' : 'text-zinc-500 hover:text-white'}`}><Cpu className="w-4 h-4" />Operações</button>
-            <button onClick={() => setCurrentView('analytics')} className={`flex-1 lg:flex-none px-4 md:px-10 py-2.5 md:py-3 rounded-xl text-[10px] md:text-[12px] font-black uppercase tracking-[0.1em] transition-all flex items-center justify-center gap-2 md:gap-3 bubble-btn ${currentView === 'analytics' ? 'bg-emerald-500 text-black shadow-xl ring-2 ring-emerald-400/50' : 'text-zinc-500 hover:text-white'}`}><BarChart3 className="w-4 h-4" />Insights</button>
+          <div className="flex items-center bg-zinc-900/80 p-1 rounded-2xl border-2 border-emerald-500 shadow-inner w-full lg:w-auto justify-center">
+            <button onClick={() => setCurrentView('current')} className={`flex-1 lg:flex-none px-4 md:px-10 py-2.5 md:py-3 rounded-xl text-[10px] md:text-[12px] font-black uppercase tracking-[0.1em] transition-all flex items-center justify-center gap-2 md:gap-3 bubble-btn border-2 ${currentView === 'current' ? 'bg-emerald-500 border-emerald-400 text-black shadow-xl ring-2 ring-emerald-400/50' : 'text-zinc-500 hover:text-white border-emerald-500/20 hover:border-emerald-500/50'}`}><Cpu className="w-4 h-4" />Operações</button>
+            <button onClick={() => setCurrentView('analytics')} className={`flex-1 lg:flex-none px-4 md:px-10 py-2.5 md:py-3 rounded-xl text-[10px] md:text-[12px] font-black uppercase tracking-[0.1em] transition-all flex items-center justify-center gap-2 md:gap-3 bubble-btn border-2 ${currentView === 'analytics' ? 'bg-emerald-500 border-emerald-400 text-black shadow-xl ring-2 ring-emerald-400/50' : 'text-zinc-500 hover:text-white border-emerald-500/20 hover:border-emerald-500/50'}`}><BarChart3 className="w-4 h-4" />Insights</button>
           </div>
 
           <div className="flex flex-wrap items-center justify-center lg:justify-end gap-3 md:gap-4 w-full lg:w-auto">
@@ -489,7 +489,7 @@ const App: React.FC = () => {
               onClick={handleManualSave} 
               title="Sincronizar Banco de Dados"
               disabled={manualSaveStatus !== 'idle'}
-              className={`flex items-center gap-2 md:gap-3 px-4 md:px-6 py-3 md:py-4 rounded-xl md:rounded-2xl border-2 transition-all shadow-2xl active:scale-95 bubble-btn ${manualSaveStatus === 'saved' ? 'bg-emerald-500 border-emerald-400 text-black shadow-[0_0_20px_rgba(16,185,129,0.5)]' : 'bg-zinc-900 border-white/10 text-emerald-500 hover:border-emerald-500/50 hover:bg-emerald-500/5'}`}
+              className={`flex items-center gap-2 md:gap-3 px-4 md:px-6 py-3 md:py-4 rounded-xl md:rounded-2xl border-2 transition-all shadow-2xl active:scale-95 bubble-btn ${manualSaveStatus === 'saved' ? 'bg-emerald-500 border-emerald-400 text-black shadow-[0_0_20px_rgba(16,185,129,0.5)]' : 'bg-zinc-900 border-emerald-500 text-emerald-500 hover:border-emerald-500 hover:bg-emerald-500/10'}`}
             >
               <Save className="w-4 h-4 md:w-5 md:h-5" />
               <span className="text-[9px] md:text-[11px] font-black uppercase tracking-widest hidden sm:inline">Salvar</span>
@@ -524,9 +524,9 @@ const App: React.FC = () => {
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-4 md:px-6 py-6 md:py-10 bg-[#1c1c1c]">
+      <main className="max-w-7xl mx-auto px-4 md:px-6 py-6 md:py-10 bg-[#292929]">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8 mb-8 md:mb-12 relative">
-          <div className="glass rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-10 border-4 border-white/10 hover:border-white/30 transition-all group shadow-2xl relative overflow-hidden hover:-translate-y-1 active:scale-[0.99] bubble-card">
+          <div className="bg-black/40 backdrop-blur-3xl rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-10 border-4 border-zinc-700 hover:border-zinc-600 transition-all group shadow-2xl relative overflow-hidden hover:-translate-y-1 active:scale-[0.99] bubble-card">
             <CornerBubble color="zinc" />
             <div className="flex items-center gap-3 mb-6 md:mb-8">
               <Calendar className="w-4 h-4 md:w-5 md:h-5 text-emerald-500" />
@@ -544,7 +544,7 @@ const App: React.FC = () => {
             </div>
           </div>
 
-          <div className="glass rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-10 border-4 border-white/10 hover:border-white/30 flex flex-col md:flex-row items-center justify-between gap-6 relative group overflow-hidden shadow-2xl hover:-translate-y-1 transition-all active:scale-[0.99] bubble-card">
+          <div className="bg-black/40 backdrop-blur-3xl rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-10 border-4 border-zinc-700 hover:border-zinc-600 flex flex-col md:flex-row items-center justify-between gap-6 relative group overflow-hidden shadow-2xl hover:-translate-y-1 transition-all active:scale-[0.99] bubble-card">
             <CornerBubble color="emerald" />
             <div className="flex items-center gap-4 md:gap-6 relative z-10 w-full md:w-auto">
               <div className="w-12 h-12 md:w-16 md:h-16 bg-emerald-500/10 rounded-xl md:rounded-2xl flex items-center justify-center border-2 border-emerald-500/30 group-hover:border-emerald-400 transition-colors shadow-inner shrink-0">
@@ -554,12 +554,6 @@ const App: React.FC = () => {
                 <span className="text-[9px] md:text-[11px] font-black text-zinc-500 uppercase block mb-1 tracking-widest italic">Faturamento</span>
                 <div className="flex flex-col">
                   <div className="text-2xl md:text-4xl font-black text-white tracking-tighter drop-shadow-md truncate">{formatCurrency(revenue)}</div>
-                  <div className="flex flex-col mt-1 md:mt-2">
-                    <span className="text-[8px] md:text-[10px] text-zinc-700 font-black uppercase tracking-[0.2em] flex items-center gap-2">
-                      <div className="w-1 h-1 md:w-1.5 md:h-1.5 bg-emerald-500 rounded-full animate-pulse shadow-[0_0_8px_#10b981]"></div>
-                      DATA_LAYER
-                    </span>
-                  </div>
                 </div>
               </div>
             </div>
@@ -633,7 +627,6 @@ const App: React.FC = () => {
                             {pieData.map((entry, index) => <Cell key={`cell-${index}`} fill={CHART_COLORS[index % CHART_COLORS.length]} stroke="rgba(0,0,0,0.5)" strokeWidth={2} />)}
                           </Pie>
                           <Tooltip content={<CustomPieTooltip />} />
-                          {/* Fix: Object literal may only specify known properties, and 'md' does not exist in type 'Properties'. Adjusted fontWeight and fontSize for valid CSS and responsive behavior. */}
                           <Legend verticalAlign="bottom" height={36} wrapperStyle={{ color: '#fff', fontWeight: 900, textTransform: 'uppercase', fontSize: window.innerWidth < 768 ? '8px' : '10px' }} />
                         </PieChart>
                       </ResponsiveContainer>
@@ -651,7 +644,7 @@ const App: React.FC = () => {
                           <XAxis dataKey="name" stroke="#888" fontSize={8} fontWeight="black" tick={{ fill: '#fff' }} />
                           <YAxis stroke="#555" fontSize={8} tickFormatter={(val) => `R$${val / 1000}k`} />
                           <Tooltip cursor={false} contentStyle={{ backgroundColor: '#000', border: '2px solid rgba(16,185,129,0.3)', borderRadius: '20px' }} formatter={(value: number) => [formatCurrency(value), 'Valor']} />
-                          <Bar dataKey="value" radius={[10, 10, 0, 0]} barSize={window.innerWidth < 768 ? 30 : 120}>
+                          <Bar dataKey="value" radius={[10, 10, 0, 0]} barSize={window.innerWidth < 768 ? 40 : 200}>
                             {comparisonData.map((entry, index) => <Cell key={`cell-${index}`} fill={entry.fill} />)}
                           </Bar>
                         </BarChart>

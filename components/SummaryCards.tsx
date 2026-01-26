@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { SummaryData } from '../types';
 import { Receipt, Landmark, Wallet, Wifi } from 'lucide-react';
@@ -14,7 +15,7 @@ const SummaryCards: React.FC<SummaryCardsProps> = ({ summary }) => {
       title: 'Receita de Caixa',
       value: summary.revenue,
       icon: <Landmark className="w-6 h-6 md:w-8 md:h-8 text-emerald-500/80" />,
-      bgColor: 'bg-[#050505]', 
+      bgColor: 'bg-black/40 backdrop-blur-3xl', 
       textColor: 'text-emerald-500/80',
       valueColor: 'text-emerald-500',
       borderColor: 'border-emerald-900/60',
@@ -24,7 +25,7 @@ const SummaryCards: React.FC<SummaryCardsProps> = ({ summary }) => {
       title: 'Despesas Consolidadas',
       value: summary.total,
       icon: <Receipt className="w-6 h-6 md:w-8 md:h-8 text-red-500/60" />,
-      bgColor: 'bg-[#050505]',
+      bgColor: 'bg-black/40 backdrop-blur-3xl',
       textColor: 'text-zinc-400',
       valueColor: 'text-red-500',
       borderColor: 'border-red-900/60',
@@ -34,7 +35,7 @@ const SummaryCards: React.FC<SummaryCardsProps> = ({ summary }) => {
       title: 'Saldo Líquido',
       value: balance,
       icon: <Wallet className={`w-6 h-6 md:w-8 md:h-8 ${isBalanceNegative ? 'text-red-500/80' : 'text-emerald-500/80'}`} />,
-      bgColor: 'bg-[#050505]',
+      bgColor: 'bg-black/40 backdrop-blur-3xl',
       textColor: isBalanceNegative ? 'text-red-400/80' : 'text-emerald-400/80',
       valueColor: isBalanceNegative ? 'text-red-500' : 'text-emerald-400',
       borderColor: isBalanceNegative ? 'border-red-900/60' : 'border-emerald-900/60',
