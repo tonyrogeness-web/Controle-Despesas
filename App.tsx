@@ -363,9 +363,10 @@ const App: React.FC = () => {
                     id="rev-start-date"
                     name="revenueStartDate"
                     type="date"
-                    className="w-full bg-black border-2 border-zinc-800 rounded-2xl px-4 py-4 md:py-5 text-white focus:border-emerald-500 outline-none font-bold transition-all shadow-inner text-xs"
+                    className="w-full bg-black border-2 border-zinc-800 rounded-2xl px-4 py-4 md:py-5 text-white focus:border-emerald-500 outline-none font-bold transition-all shadow-inner text-xs hover:cursor-pointer"
                     value={tempRevenueStartDate}
-                    onChange={handleRevenueStartDateChange}
+                    onChange={(e) => setTempRevenueStartDate(e.target.value)}
+                    onClick={(e) => e.currentTarget.showPicker()}
                   />
                 </div>
                 <div className="space-y-3">
@@ -374,9 +375,10 @@ const App: React.FC = () => {
                     id="rev-end-date"
                     name="revenueEndDate"
                     type="date"
-                    className="w-full bg-black border-2 border-zinc-800 rounded-2xl px-4 py-4 md:py-5 text-white focus:border-emerald-500 outline-none font-bold transition-all shadow-inner text-xs"
+                    className="w-full bg-black border-2 border-zinc-800 rounded-2xl px-4 py-4 md:py-5 text-white focus:border-emerald-500 outline-none font-bold transition-all shadow-inner text-xs hover:cursor-pointer"
                     value={tempRevenueEndDate}
                     onChange={(e) => setTempRevenueEndDate(e.target.value)}
+                    onClick={(e) => e.currentTarget.showPicker()}
                   />
                 </div>
               </div>
@@ -490,11 +492,11 @@ const App: React.FC = () => {
             <div className="flex flex-col sm:flex-row items-center gap-4 md:gap-8">
               <div className="w-full sm:flex-1 space-y-2 md:space-y-3">
                 <label htmlFor="filter-start" className="text-[9px] md:text-[11px] text-zinc-500 font-black uppercase tracking-wider">Início</label>
-                <input id="filter-start" name="startDate" type="date" className="w-full bg-black border-2 border-zinc-800 rounded-xl md:rounded-2xl px-4 md:px-5 py-3 md:py-4 text-white focus:border-emerald-500 outline-none font-bold transition-all shadow-inner text-sm" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
+                <input id="filter-start" name="startDate" type="date" className="w-full bg-black border-2 border-zinc-800 rounded-xl md:rounded-2xl px-4 md:px-5 py-3 md:py-4 text-white focus:border-emerald-500 outline-none font-bold transition-all shadow-inner text-sm hover:cursor-pointer" value={startDate} onChange={(e) => setStartDate(e.target.value)} onClick={(e) => e.currentTarget.showPicker()} />
               </div>
               <div className="w-full sm:flex-1 space-y-2 md:space-y-3">
                 <label htmlFor="filter-end" className="text-[9px] md:text-[11px] text-zinc-500 font-black uppercase tracking-wider">Fim</label>
-                <input id="filter-end" name="endDate" type="date" className="w-full bg-black border-2 border-zinc-800 rounded-xl md:rounded-2xl px-4 md:px-5 py-3 md:py-4 text-white focus:border-emerald-500 outline-none font-bold transition-all shadow-inner text-sm" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
+                <input id="filter-end" name="endDate" type="date" className="w-full bg-black border-2 border-zinc-800 rounded-xl md:rounded-2xl px-4 md:px-5 py-3 md:py-4 text-white focus:border-emerald-500 outline-none font-bold transition-all shadow-inner text-sm hover:cursor-pointer" value={endDate} onChange={(e) => setEndDate(e.target.value)} onClick={(e) => e.currentTarget.showPicker()} />
               </div>
             </div>
           </div>
