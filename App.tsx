@@ -1,7 +1,5 @@
-
-import React, { useState, useMemo, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { Expense, ExpenseStatus, SummaryData } from './types';
-import { INITIAL_EXPENSES, CATEGORIES as INITIAL_CATEGORIES } from './constants';
 import SummaryCards from './components/SummaryCards';
 import ExpenseTable from './components/ExpenseTable';
 import ExpenseForm from './components/ExpenseForm';
@@ -19,18 +17,7 @@ import {
   Tooltip, Legend, BarChart, Bar, XAxis, YAxis,
   CartesianGrid, LabelList
 } from 'recharts';
-
-const STORAGE_KEYS = {
-  EXPENSES: 'natsumi_db_expenses_v1',
-  CATEGORIES: 'natsumi_db_categories_v1',
-  REVENUE: 'natsumi_db_revenue_v1',
-  REVENUE_DATE: 'natsumi_db_rev_date_v1',
-  REVENUE_START: 'natsumi_db_rev_start_v1',
-  REVENUE_END: 'natsumi_db_rev_end_v1',
-  ITEM_MAP: 'natsumi_db_item_map_v1',
-  FILTER_START: 'natsumi_db_filter_start_v1',
-  FILTER_END: 'natsumi_db_filter_end_v1'
-};
+import { useExpenseData } from './hooks/useExpenseData';
 
 const playBip = () => {
   try {
@@ -64,44 +51,32 @@ const ModernLogo = () => (
 );
 
 const App: React.FC = () => {
-  const [isOnline, setIsOnline] = useState(navigator.onLine);
+  const {
+    expenses,
+    categories,
+    setCategories,
+    revenue,
+    revenueDate,
+    revenueStartDate,
+    revenueEndDate,
+    itemCategoryMap,
+    startDate,
+    setStartDate,
+    endDate,
+    setEndDate,
+    isOnline,
+    isInitialLoad,
+    syncDatabase,
+    addOrEditExpense,
+    deleteExpense,
+    updateRevenue
+  } = useExpenseData();
+
   const [currentView, setCurrentView] = useState<'current' | 'analytics'>('current');
   const [expandedChart, setExpandedChart] = useState<'pie' | 'bar' | null>(null);
   const [isRevenueModalOpen, setIsRevenueModalOpen] = useState(false);
   const [manualSaveStatus, setManualSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle');
   const [currentTime, setCurrentTime] = useState(new Date());
-
-  const [expenses, setExpenses] = useState<Expense[]>(() => {
-    const saved = localStorage.getItem(STORAGE_KEYS.EXPENSES);
-    return saved ? JSON.parse(saved) : INITIAL_EXPENSES;
-  });
-
-  const [categories, setCategories] = useState<string[]>(() => {
-    const saved = localStorage.getItem(STORAGE_KEYS.CATEGORIES);
-    return saved ? JSON.parse(saved) : INITIAL_CATEGORIES;
-  });
-
-  const [revenue, setRevenue] = useState<number>(() => {
-    const saved = localStorage.getItem(STORAGE_KEYS.REVENUE);
-    return saved ? parseFloat(saved) : 0;
-  });
-
-  const [revenueDate, setRevenueDate] = useState(() => {
-    return localStorage.getItem(STORAGE_KEYS.REVENUE_DATE) || '2026-01-31';
-  });
-
-  const [revenueStartDate, setRevenueStartDate] = useState(() => {
-    return localStorage.getItem(STORAGE_KEYS.REVENUE_START) || '2026-01-01';
-  });
-
-  const [revenueEndDate, setRevenueEndDate] = useState(() => {
-    return localStorage.getItem(STORAGE_KEYS.REVENUE_END) || '2026-01-31';
-  });
-
-  const [itemCategoryMap, setItemCategoryMap] = useState<Record<string, string>>(() => {
-    const saved = localStorage.getItem(STORAGE_KEYS.ITEM_MAP);
-    return saved ? JSON.parse(saved) : {};
-  });
 
   const [tempRevenue, setTempRevenue] = useState<number>(revenue);
   const [tempRevenueDate, setTempRevenueDate] = useState<string>(revenueDate);
@@ -113,17 +88,15 @@ const App: React.FC = () => {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingExpense, setEditingExpense] = useState<Expense | null>(null);
 
-  const [startDate, setStartDate] = useState(() => {
-    return localStorage.getItem(STORAGE_KEYS.FILTER_START) || '2026-01-01';
-  });
-
-  const [endDate, setEndDate] = useState(() => {
-    return localStorage.getItem(STORAGE_KEYS.FILTER_END) || '2026-01-31';
-  });
-
-  const [isInitialLoad, setIsInitialLoad] = useState(true);
-
   const revInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    // Update temp values when real values change (e.g. after sync)
+    setTempRevenue(revenue);
+    setTempRevenueDate(revenueDate);
+    setTempRevenueStartDate(revenueStartDate);
+    setTempRevenueEndDate(revenueEndDate);
+  }, [revenue, revenueDate, revenueStartDate, revenueEndDate]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -155,75 +128,11 @@ const App: React.FC = () => {
   }, [isRevenueModalOpen]);
 
   useEffect(() => {
-    const loadFromDB = async () => {
-      try {
-        const res = await fetch('/api/sync');
-        if (res.ok) {
-          const data = await res.json();
-          if (data.expenses && data.expenses.length > 0) {
-            setExpenses(data.expenses);
-            setRevenue(data.revenue);
-            setTempRevenue(data.revenue);
-          }
-        }
-      } catch (e) {
-        console.error("DB Initial Load Failed, using local storage/mock", e);
-      } finally {
-        setIsInitialLoad(false);
-      }
-    };
-    loadFromDB();
-  }, []);
-
-  useEffect(() => {
-    const handleOnline = () => setIsOnline(true);
-    const handleOffline = () => setIsOnline(false);
-    window.addEventListener('online', handleOnline);
-    window.addEventListener('offline', handleOffline);
-
     const timer = setInterval(() => {
       setCurrentTime(new Date());
     }, 60000);
-
-    return () => {
-      window.removeEventListener('online', handleOnline);
-      window.removeEventListener('offline', handleOffline);
-      clearInterval(timer);
-    };
+    return () => clearInterval(timer);
   }, []);
-
-  const syncDatabase = useCallback(async (localOnly = false) => {
-    localStorage.setItem(STORAGE_KEYS.EXPENSES, JSON.stringify(expenses));
-    localStorage.setItem(STORAGE_KEYS.CATEGORIES, JSON.stringify(categories));
-    localStorage.setItem(STORAGE_KEYS.REVENUE, revenue.toString());
-    localStorage.setItem(STORAGE_KEYS.REVENUE_DATE, revenueDate);
-    localStorage.setItem(STORAGE_KEYS.REVENUE_START, revenueStartDate);
-    localStorage.setItem(STORAGE_KEYS.REVENUE_END, revenueEndDate);
-    localStorage.setItem(STORAGE_KEYS.ITEM_MAP, JSON.stringify(itemCategoryMap));
-
-    if (!localOnly && isOnline) {
-      try {
-        await fetch('/api/sync', {
-          method: 'POST',
-          body: JSON.stringify({ expenses, revenue }),
-          headers: { 'Content-Type': 'application/json' }
-        });
-      } catch (e) {
-        console.warn("DB Sync failed, will retry later", e);
-      }
-    }
-  }, [expenses, categories, revenue, revenueDate, revenueStartDate, revenueEndDate, itemCategoryMap, isOnline]);
-
-  useEffect(() => {
-    if (!isInitialLoad) {
-      syncDatabase(true);
-    }
-  }, [expenses, categories, revenue, revenueDate, revenueStartDate, revenueEndDate, itemCategoryMap, isInitialLoad, syncDatabase]);
-
-  useEffect(() => {
-    localStorage.setItem(STORAGE_KEYS.FILTER_START, startDate);
-    localStorage.setItem(STORAGE_KEYS.FILTER_END, endDate);
-  }, [startDate, endDate]);
 
   const handleManualSave = async () => {
     setManualSaveStatus('saving');
@@ -291,32 +200,20 @@ const App: React.FC = () => {
   };
 
   const handleAddOrEdit = (data: Partial<Expense>) => {
-    if (data.name && data.category) {
-      setItemCategoryMap(prev => ({ ...prev, [data.name!]: data.category! }));
-    }
-
-    if (editingExpense) {
-      setExpenses(prev => prev.map(exp => exp.id === editingExpense.id ? { ...exp, ...data } as Expense : exp));
-    } else {
-      const newExp: Expense = { ...data, id: Math.random().toString(36).substr(2, 9), status: ExpenseStatus.PAID } as Expense;
-      setExpenses(prev => [...prev, newExp]);
-      playBip();
-    }
+    addOrEditExpense(data, editingExpense?.id);
+    playBip();
     setEditingExpense(null);
   };
 
   const handleDeleteExpense = (id: string) => {
-    setExpenses(prev => prev.filter(exp => exp.id !== id));
+    deleteExpense(id);
     playBip();
   };
 
   const handleSaveRevenue = () => {
     setSaveStatus('saving');
     setTimeout(() => {
-      setRevenue(tempRevenue);
-      setRevenueDate(tempRevenueDate);
-      setRevenueStartDate(tempRevenueStartDate);
-      setRevenueEndDate(tempRevenueEndDate);
+      updateRevenue(tempRevenue, tempRevenueDate, tempRevenueStartDate, tempRevenueEndDate);
       setSaveStatus('success');
       playBip();
       setTimeout(() => {
@@ -681,6 +578,7 @@ const App: React.FC = () => {
                             paddingAngle={6}
                             dataKey="value"
                             nameKey="name"
+                            label={false}
                           >
                             {pieData.map((entry, index) => <Cell key={`cell-${index}`} fill={CHART_COLORS[index % CHART_COLORS.length]} stroke="rgba(0,0,0,0.5)" strokeWidth={2} />)}
                           </Pie>

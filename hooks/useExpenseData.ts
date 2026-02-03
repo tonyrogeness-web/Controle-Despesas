@@ -157,6 +157,15 @@ export const useExpenseData = () => {
         setRevenueEndDate(end);
     };
 
+    const updateStartDate = (newDate: string) => {
+        setStartDate(newDate);
+        // Auto-set end date to end of month
+        const [year, month] = newDate.split('-').map(Number);
+        const lastDay = new Date(year, month, 0).getDate(); // month is 1-indexed here effectively because day 0 of next month is last day of current
+        const newEndDate = `${year}-${String(month).padStart(2, '0')}-${String(lastDay).padStart(2, '0')}`;
+        setEndDate(newEndDate);
+    };
+
     return {
         expenses,
         categories,
@@ -168,7 +177,7 @@ export const useExpenseData = () => {
         itemCategoryMap,
         setItemCategoryMap,
         startDate,
-        setStartDate,
+        setStartDate: updateStartDate, // Expose custom handler
         endDate,
         setEndDate,
         isOnline,
