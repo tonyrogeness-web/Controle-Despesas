@@ -6,17 +6,17 @@ import SummaryCards from './components/SummaryCards';
 import ExpenseTable from './components/ExpenseTable';
 import ExpenseForm from './components/ExpenseForm';
 import CornerBubble from './components/CornerBubble';
-import { 
-  Plus, Search, Calendar, Database, 
-  Landmark, BarChart3, 
+import {
+  Plus, Search, Calendar, Database,
+  Landmark, BarChart3,
   ShieldCheck, FileSpreadsheet,
-  Maximize2, Cpu, 
+  Maximize2, Cpu,
   ArrowUpRight, X, CheckCircle2, Save, Wifi, WifiOff,
   ChevronUp, ChevronDown
 } from 'lucide-react';
-import { 
-  PieChart, Pie, Cell, ResponsiveContainer, 
-  Tooltip, Legend, BarChart, Bar, XAxis, YAxis, 
+import {
+  PieChart, Pie, Cell, ResponsiveContainer,
+  Tooltip, Legend, BarChart, Bar, XAxis, YAxis,
   CartesianGrid, LabelList
 } from 'recharts';
 
@@ -25,7 +25,11 @@ const STORAGE_KEYS = {
   CATEGORIES: 'natsumi_db_categories_v1',
   REVENUE: 'natsumi_db_revenue_v1',
   REVENUE_DATE: 'natsumi_db_rev_date_v1',
-  ITEM_MAP: 'natsumi_db_item_map_v1'
+  REVENUE_START: 'natsumi_db_rev_start_v1',
+  REVENUE_END: 'natsumi_db_rev_end_v1',
+  ITEM_MAP: 'natsumi_db_item_map_v1',
+  FILTER_START: 'natsumi_db_filter_start_v1',
+  FILTER_END: 'natsumi_db_filter_end_v1'
 };
 
 const playBip = () => {
@@ -36,7 +40,7 @@ const playBip = () => {
     oscillator.connect(gainNode);
     gainNode.connect(audioCtx.destination);
     oscillator.type = 'sine';
-    oscillator.frequency.setValueAtTime(880, audioCtx.currentTime); 
+    oscillator.frequency.setValueAtTime(880, audioCtx.currentTime);
     gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
     gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
     oscillator.start();
@@ -86,6 +90,14 @@ const App: React.FC = () => {
     return localStorage.getItem(STORAGE_KEYS.REVENUE_DATE) || '2026-01-31';
   });
 
+  const [revenueStartDate, setRevenueStartDate] = useState(() => {
+    return localStorage.getItem(STORAGE_KEYS.REVENUE_START) || '2026-01-01';
+  });
+
+  const [revenueEndDate, setRevenueEndDate] = useState(() => {
+    return localStorage.getItem(STORAGE_KEYS.REVENUE_END) || '2026-01-31';
+  });
+
   const [itemCategoryMap, setItemCategoryMap] = useState<Record<string, string>>(() => {
     const saved = localStorage.getItem(STORAGE_KEYS.ITEM_MAP);
     return saved ? JSON.parse(saved) : {};
@@ -93,12 +105,22 @@ const App: React.FC = () => {
 
   const [tempRevenue, setTempRevenue] = useState<number>(revenue);
   const [tempRevenueDate, setTempRevenueDate] = useState<string>(revenueDate);
+  const [tempRevenueStartDate, setTempRevenueStartDate] = useState<string>(revenueStartDate);
+  const [tempRevenueEndDate, setTempRevenueEndDate] = useState<string>(revenueEndDate);
+
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'success'>('idle');
   const [searchTerm, setSearchTerm] = useState('');
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingExpense, setEditingExpense] = useState<Expense | null>(null);
-  const [startDate, setStartDate] = useState('2026-01-01');
-  const [endDate, setEndDate] = useState('2026-01-31');
+
+  const [startDate, setStartDate] = useState(() => {
+    return localStorage.getItem(STORAGE_KEYS.FILTER_START) || '2026-01-01';
+  });
+
+  const [endDate, setEndDate] = useState(() => {
+    return localStorage.getItem(STORAGE_KEYS.FILTER_END) || '2026-01-31';
+  });
+
   const [isInitialLoad, setIsInitialLoad] = useState(true);
 
   const revInputRef = useRef<HTMLInputElement>(null);
@@ -158,7 +180,7 @@ const App: React.FC = () => {
     const handleOffline = () => setIsOnline(false);
     window.addEventListener('online', handleOnline);
     window.addEventListener('offline', handleOffline);
-    
+
     const timer = setInterval(() => {
       setCurrentTime(new Date());
     }, 60000);
@@ -175,8 +197,10 @@ const App: React.FC = () => {
     localStorage.setItem(STORAGE_KEYS.CATEGORIES, JSON.stringify(categories));
     localStorage.setItem(STORAGE_KEYS.REVENUE, revenue.toString());
     localStorage.setItem(STORAGE_KEYS.REVENUE_DATE, revenueDate);
+    localStorage.setItem(STORAGE_KEYS.REVENUE_START, revenueStartDate);
+    localStorage.setItem(STORAGE_KEYS.REVENUE_END, revenueEndDate);
     localStorage.setItem(STORAGE_KEYS.ITEM_MAP, JSON.stringify(itemCategoryMap));
-    
+
     if (!localOnly && isOnline) {
       try {
         await fetch('/api/sync', {
@@ -188,18 +212,23 @@ const App: React.FC = () => {
         console.warn("DB Sync failed, will retry later", e);
       }
     }
-  }, [expenses, categories, revenue, revenueDate, itemCategoryMap, isOnline]);
+  }, [expenses, categories, revenue, revenueDate, revenueStartDate, revenueEndDate, itemCategoryMap, isOnline]);
 
   useEffect(() => {
     if (!isInitialLoad) {
-      syncDatabase(true); 
+      syncDatabase(true);
     }
-  }, [expenses, categories, revenue, revenueDate, itemCategoryMap, isInitialLoad, syncDatabase]);
+  }, [expenses, categories, revenue, revenueDate, revenueStartDate, revenueEndDate, itemCategoryMap, isInitialLoad, syncDatabase]);
+
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEYS.FILTER_START, startDate);
+    localStorage.setItem(STORAGE_KEYS.FILTER_END, endDate);
+  }, [startDate, endDate]);
 
   const handleManualSave = async () => {
     setManualSaveStatus('saving');
     playBip();
-    await syncDatabase(false); 
+    await syncDatabase(false);
     setTimeout(() => {
       setManualSaveStatus('saved');
       setTimeout(() => setManualSaveStatus('idle'), 2500);
@@ -213,8 +242,8 @@ const App: React.FC = () => {
   const activeExpenses = useMemo(() => {
     return expenses.filter(exp => {
       const isNotArchived = exp.status !== ExpenseStatus.ARCHIVED;
-      const matchesSearch = exp.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                           exp.category.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesSearch = exp.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        exp.category.toLowerCase().includes(searchTerm.toLowerCase());
       const matchesDate = exp.dueDate >= startDate && exp.dueDate <= endDate;
       return isNotArchived && matchesSearch && matchesDate;
     }).sort((a, b) => a.dueDate.localeCompare(b.dueDate));
@@ -286,6 +315,8 @@ const App: React.FC = () => {
     setTimeout(() => {
       setRevenue(tempRevenue);
       setRevenueDate(tempRevenueDate);
+      setRevenueStartDate(tempRevenueStartDate);
+      setRevenueEndDate(tempRevenueEndDate);
       setSaveStatus('success');
       playBip();
       setTimeout(() => {
@@ -304,7 +335,7 @@ const App: React.FC = () => {
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = `NATSUMI_EXPORT_${new Date().toISOString().slice(0,10)}.csv`;
+    link.download = `NATSUMI_EXPORT_${new Date().toISOString().slice(0, 10)}.csv`;
     link.click();
   };
 
@@ -356,7 +387,7 @@ const App: React.FC = () => {
               {expandedChart === 'pie' ? (
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
-                    <Pie data={pieData} cx="50%" cy="50%" innerRadius={window.innerWidth < 768 ? 60 : 140} outerRadius={window.innerWidth < 768 ? 100 : 220} paddingAngle={8} dataKey="value" nameKey="name" label={window.innerWidth > 768 ? ({name, value}) => `${name}: ${formatCurrency(value)}` : false}>
+                    <Pie data={pieData} cx="50%" cy="50%" innerRadius={window.innerWidth < 768 ? 60 : 140} outerRadius={window.innerWidth < 768 ? 100 : 220} paddingAngle={8} dataKey="value" nameKey="name" label={window.innerWidth > 768 ? ({ name, value }) => `${name}: ${formatCurrency(value)}` : false}>
                       {pieData.map((entry, index) => <Cell key={`cell-${index}`} fill={CHART_COLORS[index % CHART_COLORS.length]} stroke="rgba(0,0,0,0.6)" strokeWidth={3} />)}
                     </Pie>
                     <Tooltip content={<CustomPieTooltip />} />
@@ -374,7 +405,7 @@ const App: React.FC = () => {
                       {comparisonData.map((entry, index) => <Cell key={`cell-${index}`} fill={entry.fill} />)}
                       <LabelList dataKey="value" position="top" content={(props: any) => {
                         const { x, y, width, value } = props;
-                        return <text x={x + width / 2} y={y - 10} fill="#fff" textAnchor="middle" fontSize={window.innerWidth < 768 ? 10 : 16} fontWeight="black">{window.innerWidth < 768 ? `R$${(value/1000).toFixed(0)}k` : formatCurrency(value)}</text>;
+                        return <text x={x + width / 2} y={y - 10} fill="#fff" textAnchor="middle" fontSize={window.innerWidth < 768 ? 10 : 16} fontWeight="black">{window.innerWidth < 768 ? `R$${(value / 1000).toFixed(0)}k` : formatCurrency(value)}</text>;
                       }} />
                     </Bar>
                   </BarChart>
@@ -398,36 +429,63 @@ const App: React.FC = () => {
                 <label htmlFor="rev-amount" className="text-[10px] md:text-[11px] font-black text-zinc-500 uppercase tracking-widest">Valor Bruto (BRL)</label>
                 <div className="relative">
                   <span className="absolute left-6 top-1/2 -translate-y-1/2 text-sm font-black text-zinc-600">R$</span>
-                  <input 
+                  <input
                     id="rev-amount"
                     ref={revInputRef}
                     name="revenueAmount"
-                    type="text" 
+                    type="text"
                     inputMode="decimal"
-                    className="w-full bg-black border-2 border-zinc-800 rounded-2xl pl-14 pr-6 py-4 md:py-5 text-xl md:text-2xl font-black text-emerald-500 focus:border-emerald-500 outline-none transition-all shadow-inner" 
-                    value={tempRevenue} 
+                    className="w-full bg-black border-2 border-zinc-800 rounded-2xl pl-14 pr-6 py-4 md:py-5 text-xl md:text-2xl font-black text-emerald-500 focus:border-emerald-500 outline-none transition-all shadow-inner"
+                    value={tempRevenue}
                     onChange={(e) => {
                       const val = e.target.value.replace(',', '.');
                       if (val === '' || !isNaN(Number(val))) {
                         setTempRevenue(val === '' ? 0 : parseFloat(val));
                       }
-                    }} 
+                    }}
                   />
                 </div>
               </div>
+
               <div className="space-y-3">
                 <label htmlFor="rev-date" className="text-[10px] md:text-[11px] font-black text-zinc-500 uppercase tracking-widest">Data do Aporte</label>
-                <input 
+                <input
                   id="rev-date"
                   name="revenueDate"
-                  type="date" 
-                  className="w-full bg-black border-2 border-zinc-800 rounded-2xl px-6 py-4 md:py-5 text-white focus:border-emerald-500 outline-none font-bold transition-all shadow-inner" 
-                  value={tempRevenueDate} 
-                  onChange={(e) => setTempRevenueDate(e.target.value)} 
+                  type="date"
+                  className="w-full bg-black border-2 border-zinc-800 rounded-2xl px-6 py-4 md:py-5 text-white focus:border-emerald-500 outline-none font-bold transition-all shadow-inner"
+                  value={tempRevenueDate}
+                  onChange={(e) => setTempRevenueDate(e.target.value)}
                 />
               </div>
-              <button 
-                onClick={handleSaveRevenue} 
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-3">
+                  <label htmlFor="rev-start-date" className="text-[10px] md:text-[11px] font-black text-zinc-500 uppercase tracking-widest">Data Inicial</label>
+                  <input
+                    id="rev-start-date"
+                    name="revenueStartDate"
+                    type="date"
+                    className="w-full bg-black border-2 border-zinc-800 rounded-2xl px-4 py-4 md:py-5 text-white focus:border-emerald-500 outline-none font-bold transition-all shadow-inner text-xs"
+                    value={tempRevenueStartDate}
+                    onChange={(e) => setTempRevenueStartDate(e.target.value)}
+                  />
+                </div>
+                <div className="space-y-3">
+                  <label htmlFor="rev-end-date" className="text-[10px] md:text-[11px] font-black text-zinc-500 uppercase tracking-widest">Data Final</label>
+                  <input
+                    id="rev-end-date"
+                    name="revenueEndDate"
+                    type="date"
+                    className="w-full bg-black border-2 border-zinc-800 rounded-2xl px-4 py-4 md:py-5 text-white focus:border-emerald-500 outline-none font-bold transition-all shadow-inner text-xs"
+                    value={tempRevenueEndDate}
+                    onChange={(e) => setTempRevenueEndDate(e.target.value)}
+                  />
+                </div>
+              </div>
+
+              <button
+                onClick={handleSaveRevenue}
                 disabled={saveStatus !== 'idle'}
                 className={`w-full py-4 md:py-5 rounded-2xl font-black uppercase text-[11px] md:text-[12px] tracking-[0.2em] shadow-xl transition-all active:scale-95 group relative overflow-hidden flex items-center justify-center gap-3 bubble-btn ${saveStatus === 'success' ? 'bg-white text-black' : 'bg-emerald-500 text-black hover:bg-emerald-400'}`}
               >
@@ -473,7 +531,7 @@ const App: React.FC = () => {
                 </div>
               </div>
             </div>
-            
+
             <div className="text-[9px] font-black text-zinc-600 uppercase tracking-[0.1em] text-right block lg:hidden italic">
               {currentTime.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
             </div>
@@ -485,8 +543,8 @@ const App: React.FC = () => {
           </div>
 
           <div className="flex flex-wrap items-center justify-center lg:justify-end gap-3 md:gap-4 w-full lg:w-auto">
-            <button 
-              onClick={handleManualSave} 
+            <button
+              onClick={handleManualSave}
               title="Sincronizar Banco de Dados"
               disabled={manualSaveStatus !== 'idle'}
               className={`flex items-center gap-2 md:gap-3 px-4 md:px-6 py-3 md:py-4 rounded-xl md:rounded-2xl border-2 transition-all shadow-2xl active:scale-95 bubble-btn ${manualSaveStatus === 'saved' ? 'bg-emerald-500 border-emerald-400 text-black shadow-[0_0_20px_rgba(16,185,129,0.5)]' : 'bg-zinc-900 border-emerald-500 text-emerald-500 hover:border-emerald-500 hover:bg-emerald-500/10'}`}
@@ -503,17 +561,17 @@ const App: React.FC = () => {
                 {currentTime.toLocaleDateString('pt-BR')} - {currentTime.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
               </div>
             </div>
-            
+
             <div className="flex flex-row lg:flex-col gap-2">
-              <button 
-                onClick={scrollToTop} 
+              <button
+                onClick={scrollToTop}
                 className="p-3 bg-zinc-900 text-zinc-500 border-2 border-white/5 rounded-xl transition-all shadow-2xl active:scale-95 hover:bg-emerald-500/10 hover:border-emerald-500 hover:text-emerald-500 bubble-btn"
                 title="Topo"
               >
                 <ChevronUp className="w-4 h-4" />
               </button>
-              <button 
-                onClick={scrollToBottom} 
+              <button
+                onClick={scrollToBottom}
                 className="p-3 bg-zinc-900 text-zinc-500 border-2 border-white/5 rounded-xl transition-all shadow-2xl active:scale-95 hover:bg-emerald-500/10 hover:border-emerald-500 hover:text-emerald-500 bubble-btn"
                 title="Fim"
               >
@@ -558,12 +616,12 @@ const App: React.FC = () => {
               </div>
             </div>
             <div className="relative z-10 w-full md:w-auto flex flex-row md:flex-col gap-2 justify-center">
-              <button 
-                onClick={() => setIsRevenueModalOpen(true)} 
+              <button
+                onClick={() => setIsRevenueModalOpen(true)}
                 className="flex-1 md:flex-none bg-emerald-600 hover:bg-emerald-500 text-white border-2 border-emerald-400/30 hover:border-white/50 px-4 py-2.5 rounded-xl transition-all flex items-center justify-center gap-2 shadow-lg text-[9px] font-black uppercase relative active:scale-95 bubble-btn"
               >
-                 <ArrowUpRight className="w-3 h-3" />
-                 Atualizar
+                <ArrowUpRight className="w-3 h-3" />
+                Atualizar
               </button>
               <button onClick={exportToExcel} className="flex-1 md:flex-none bg-zinc-800 hover:bg-emerald-500 text-zinc-400 hover:text-black border-2 border-white/5 hover:border-white/40 px-4 py-2.5 rounded-xl transition-all flex items-center justify-center gap-2 shadow-lg text-[9px] font-black uppercase relative bubble-btn">
                 <FileSpreadsheet className="w-3 h-3" />
@@ -575,8 +633,8 @@ const App: React.FC = () => {
 
         {isInitialLoad ? (
           <div className="flex flex-col items-center justify-center py-20 gap-4 opacity-50">
-             <div className="w-10 h-10 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin"></div>
-             <span className="text-[10px] md:text-[11px] font-black uppercase tracking-widest text-zinc-500">Iniciando Link de Dados...</span>
+            <div className="w-10 h-10 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin"></div>
+            <span className="text-[10px] md:text-[11px] font-black uppercase tracking-widest text-zinc-500">Iniciando Link de Dados...</span>
           </div>
         ) : (
           <>
@@ -589,14 +647,14 @@ const App: React.FC = () => {
                   <div className="relative group w-full sm:w-auto">
                     <label htmlFor="main-search-input" className="sr-only">Localizar Operações</label>
                     <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500 w-4 h-4 md:w-5 md:h-5 group-focus-within:text-emerald-500 transition-colors" />
-                    <input 
+                    <input
                       id="main-search-input"
                       name="mainSearch"
-                      type="text" 
-                      placeholder="LOCALIZAR..." 
-                      className="pl-12 pr-6 py-3 md:py-4 bg-zinc-900/60 border-2 border-zinc-800 rounded-xl md:rounded-2xl text-[10px] md:text-[12px] font-bold text-white outline-none focus:border-emerald-500 transition-all w-full md:w-80 uppercase tracking-widest shadow-lg" 
-                      value={searchTerm} 
-                      onChange={(e) => setSearchTerm(e.target.value)} 
+                      type="text"
+                      placeholder="LOCALIZAR..."
+                      className="pl-12 pr-6 py-3 md:py-4 bg-zinc-900/60 border-2 border-zinc-800 rounded-xl md:rounded-2xl text-[10px] md:text-[12px] font-bold text-white outline-none focus:border-emerald-500 transition-all w-full md:w-80 uppercase tracking-widest shadow-lg"
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
                     />
                   </div>
                 </div>
@@ -614,14 +672,14 @@ const App: React.FC = () => {
                       <h3 className="text-[10px] md:text-[12px] font-black text-white uppercase tracking-[0.2em] md:tracking-[0.3em] mb-4 text-center italic">Despesas por Descritivo</h3>
                       <ResponsiveContainer width="100%" height="100%">
                         <PieChart>
-                          <Pie 
-                            data={pieData} 
-                            cx="50%" 
-                            cy="50%" 
-                            innerRadius={window.innerWidth < 768 ? 50 : 90} 
-                            outerRadius={window.innerWidth < 768 ? 80 : 140} 
-                            paddingAngle={6} 
-                            dataKey="value" 
+                          <Pie
+                            data={pieData}
+                            cx="50%"
+                            cy="50%"
+                            innerRadius={window.innerWidth < 768 ? 50 : 90}
+                            outerRadius={window.innerWidth < 768 ? 80 : 140}
+                            paddingAngle={6}
+                            dataKey="value"
                             nameKey="name"
                           >
                             {pieData.map((entry, index) => <Cell key={`cell-${index}`} fill={CHART_COLORS[index % CHART_COLORS.length]} stroke="rgba(0,0,0,0.5)" strokeWidth={2} />)}
@@ -658,13 +716,13 @@ const App: React.FC = () => {
         )}
       </main>
 
-      <ExpenseForm 
-        isOpen={isFormOpen} 
-        onClose={() => { setIsFormOpen(false); setEditingExpense(null); }} 
-        onSubmit={handleAddOrEdit} 
-        onDelete={handleDeleteExpense} 
-        initialData={editingExpense} 
-        categories={categories} 
+      <ExpenseForm
+        isOpen={isFormOpen}
+        onClose={() => { setIsFormOpen(false); setEditingExpense(null); }}
+        onSubmit={handleAddOrEdit}
+        onDelete={handleDeleteExpense}
+        initialData={editingExpense}
+        categories={categories}
         onAddCategory={(cat) => setCategories(prev => [...prev, cat])}
         existingItemNames={existingItemNames}
         itemCategoryMap={itemCategoryMap}
