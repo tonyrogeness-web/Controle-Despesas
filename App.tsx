@@ -365,7 +365,7 @@ const App: React.FC = () => {
                     type="date"
                     className="w-full bg-black border-2 border-zinc-800 rounded-2xl px-4 py-4 md:py-5 text-white focus:border-emerald-500 outline-none font-bold transition-all shadow-inner text-xs"
                     value={tempRevenueStartDate}
-                    onChange={(e) => setTempRevenueStartDate(e.target.value)}
+                    onChange={handleRevenueStartDateChange}
                   />
                 </div>
                 <div className="space-y-3">
