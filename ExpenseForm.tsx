@@ -26,13 +26,13 @@ const CATEGORY_KEYWORDS: Record<string, string[]> = {
   'Outros': ['extras', 'outros', 'patrocinado', 'marketing', 'instagram', 'facebook', 'ads', 'google', 'brinde', 'evento']
 };
 
-const ExpenseForm: React.FC<ExpenseFormProps> = ({ 
-  isOpen, 
-  onClose, 
-  onSubmit, 
-  onDelete, 
-  initialData, 
-  categories, 
+const ExpenseForm: React.FC<ExpenseFormProps> = ({
+  isOpen,
+  onClose,
+  onSubmit,
+  onDelete,
+  initialData,
+  categories,
   onAddCategory,
   existingItemNames = [],
   itemCategoryMap = {}
@@ -63,7 +63,7 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({
         status: ExpenseStatus.PAID,
       });
     }
-    
+
     if (isOpen) {
       setTimeout(() => {
         inputRef.current?.focus();
@@ -85,12 +85,12 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({
     if (!initialData && formData.name) {
       const currentName = formData.name;
       const lowerName = currentName.toLowerCase();
-      
+
       if (itemCategoryMap[currentName]) {
         setFormData(prev => ({ ...prev, category: itemCategoryMap[currentName] }));
         return;
       }
-      
+
       for (const [category, keywords] of Object.entries(CATEGORY_KEYWORDS)) {
         if (keywords.some(keyword => lowerName.includes(keyword.toLowerCase()))) {
           if (categories.includes(category)) {
@@ -126,33 +126,33 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({
     }
   };
 
-  const filteredItems = existingItemNames.filter(name => 
+  const filteredItems = existingItemNames.filter(name =>
     name.toLowerCase().includes((formData.name || '').toLowerCase())
   );
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-6 bg-black/95 backdrop-blur-2xl animate-in fade-in duration-300">
-      <div className="bg-zinc-900 rounded-[2rem] md:rounded-[3rem] w-full max-w-lg shadow-2xl overflow-y-auto max-h-[90vh] border-2 border-white/10 animate-in zoom-in-95 duration-300 bubble-card custom-scrollbar">
-        <div className="p-6 md:p-10 border-b-2 border-white/5 flex items-center justify-between bg-black/40 backdrop-blur-md sticky top-0 z-10">
-          <div className="flex items-center gap-4 md:gap-5">
-            <div className="w-10 h-10 md:w-12 md:h-12 bg-emerald-500/10 rounded-xl md:rounded-2xl flex items-center justify-center border-2 border-emerald-500/30">
-              {initialData ? <Edit2 className="w-5 h-5 md:w-6 md:h-6 text-emerald-500" /> : <Plus className="w-5 h-5 md:w-6 md:h-6 text-emerald-500" />}
+      <div className="bg-zinc-900 rounded-2xl md:rounded-3xl w-full max-w-lg shadow-2xl overflow-y-auto max-h-[90vh] border border-white/10 animate-in zoom-in-95 duration-300 bubble-card custom-scrollbar">
+        <div className="p-4 md:p-6 border-b border-white/5 flex items-center justify-between bg-black/40 backdrop-blur-md sticky top-0 z-10">
+          <div className="flex items-center gap-3 md:gap-4">
+            <div className="w-8 h-8 md:w-10 md:h-10 bg-emerald-500/10 rounded-lg md:rounded-xl flex items-center justify-center border border-emerald-500/30">
+              {initialData ? <Edit2 className="w-4 h-4 md:w-5 md:h-5 text-emerald-500" /> : <Plus className="w-4 h-4 md:w-5 md:h-5 text-emerald-500" />}
             </div>
             <div>
-              <h2 className="text-sm md:text-base font-black text-white uppercase tracking-[0.1em] md:tracking-[0.2em] italic leading-none">
+              <h2 className="text-xs md:text-sm font-bold text-white uppercase tracking-wider italic leading-none">
                 {initialData ? 'Modificar Registro' : 'Novo Lançamento'}
               </h2>
-              <p className="text-[9px] md:text-[11px] font-bold text-zinc-500 uppercase tracking-widest mt-1 md:mt-2">Terminal NATSUMI</p>
+              <p className="text-[9px] md:text-[10px] font-bold text-zinc-500 uppercase tracking-wider mt-1">Terminal NATSUMI</p>
             </div>
           </div>
-          <button onClick={onClose} className="p-2 md:p-3 hover:bg-white/10 rounded-xl md:rounded-2xl transition-all text-zinc-500 hover:text-white border-2 border-transparent hover:border-white/20">
-            <X className="w-6 h-6 md:w-7 md:h-7" />
+          <button onClick={onClose} className="p-2 hover:bg-white/10 rounded-lg transition-all text-zinc-500 hover:text-white border border-transparent hover:border-white/20">
+            <X className="w-5 h-5" />
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-6 md:p-10 space-y-6 md:space-y-8">
-          <div className="space-y-3 relative" ref={dropdownRef}>
-            <label htmlFor="expense-name" className="block text-[10px] md:text-[12px] font-black text-zinc-500 uppercase tracking-[0.2em] md:tracking-[0.3em] ml-1">Descrição do Item</label>
+        <form onSubmit={handleSubmit} className="p-4 md:p-6 space-y-4 md:space-y-6">
+          <div className="space-y-2 relative" ref={dropdownRef}>
+            <label htmlFor="expense-name" className="block text-[10px] md:text-xs font-bold text-zinc-500 uppercase tracking-wider ml-1">Descrição do Item</label>
             <div className="relative">
               <input
                 id="expense-name"
@@ -161,7 +161,7 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({
                 type="text"
                 required
                 autoComplete="off"
-                className="w-full px-5 md:px-6 py-4 md:py-5 rounded-xl md:rounded-2xl bg-black border-2 border-zinc-800 hover:border-white/30 text-white focus:border-emerald-500 outline-none transition-all placeholder:text-zinc-800 font-bold uppercase tracking-widest text-xs md:text-sm shadow-inner"
+                className="w-full px-4 md:px-5 py-3 md:py-4 rounded-xl bg-black border border-zinc-800 hover:border-white/20 text-white focus:border-emerald-500 outline-none transition-all placeholder:text-zinc-800 font-bold uppercase tracking-wider text-xs md:text-sm shadow-inner"
                 placeholder="SELECIONE OU DIGITE..."
                 value={formData.name}
                 onFocus={() => setShowDropdown(true)}
@@ -170,7 +170,7 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({
                   setShowDropdown(true);
                 }}
               />
-              <ChevronDown className={`absolute right-5 top-1/2 -translate-y-1/2 text-zinc-600 transition-transform duration-300 ${showDropdown ? 'rotate-180' : ''}`} />
+              <ChevronDown className={`absolute right-4 top-1/2 -translate-y-1/2 text-zinc-600 transition-transform duration-300 w-4 h-4 ${showDropdown ? 'rotate-180' : ''}`} />
             </div>
 
             {showDropdown && (
@@ -199,55 +199,55 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({
             )}
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8">
-            <div className="space-y-3">
-              <label htmlFor="expense-value" className="block text-[10px] md:text-[12px] font-black text-zinc-500 uppercase tracking-[0.2em] md:tracking-[0.3em] ml-1">Valor Bruto</label>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
+            <div className="space-y-2">
+              <label htmlFor="expense-value" className="block text-[10px] md:text-xs font-bold text-zinc-500 uppercase tracking-wider ml-1">Valor Bruto</label>
               <div className="relative">
-                <span className="absolute left-6 top-1/2 -translate-y-1/2 text-sm font-black text-zinc-600">R$</span>
+                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-sm font-bold text-zinc-600">R$</span>
                 <input
                   id="expense-value"
                   name="value"
                   type="number"
                   step="0.01"
                   required
-                  className="w-full pl-14 pr-6 py-4 md:py-5 rounded-xl md:rounded-2xl bg-black border-2 border-zinc-800 hover:border-white/30 text-white focus:border-emerald-500 outline-none transition-all font-black text-lg md:text-xl tracking-tighter shadow-inner"
+                  className="w-full pl-12 pr-4 py-3 md:py-4 rounded-xl bg-black border border-zinc-800 hover:border-white/20 text-white focus:border-emerald-500 outline-none transition-all font-black text-base md:text-lg tracking-tight shadow-inner"
                   value={formData.value || ''}
                   onChange={(e) => setFormData({ ...formData, value: parseFloat(e.target.value) })}
                 />
               </div>
             </div>
-            <div className="space-y-3">
-              <label htmlFor="expense-date" className="block text-[10px] md:text-[12px] font-black text-zinc-500 uppercase tracking-[0.2em] md:tracking-[0.3em] ml-1">Vencimento</label>
+            <div className="space-y-2">
+              <label htmlFor="expense-date" className="block text-[10px] md:text-xs font-bold text-zinc-500 uppercase tracking-wider ml-1">Vencimento</label>
               <input
                 id="expense-date"
                 name="dueDate"
                 type="date"
                 required
-                className="w-full px-5 md:px-6 py-4 md:py-5 rounded-xl md:rounded-2xl bg-black border-2 border-zinc-800 hover:border-white/30 text-white focus:border-emerald-500 outline-none transition-all shadow-inner font-bold text-sm"
+                className="w-full px-4 md:px-5 py-3 md:py-4 rounded-xl bg-black border border-zinc-800 hover:border-white/20 text-white focus:border-emerald-500 outline-none transition-all shadow-inner font-bold text-sm"
                 value={formData.dueDate}
                 onChange={(e) => setFormData({ ...formData, dueDate: e.target.value })}
               />
             </div>
           </div>
 
-          <div className="space-y-3">
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center px-1 gap-2">
-              <label htmlFor="expense-category" className="block text-[10px] md:text-[12px] font-black text-zinc-500 uppercase tracking-[0.2em] md:tracking-[0.3em]">Grupo de Custos</label>
-              <button 
-                type="button" 
+          <div className="space-y-2">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center px-1 gap-1">
+              <label htmlFor="expense-category" className="block text-[10px] md:text-xs font-bold text-zinc-500 uppercase tracking-wider">Grupo de Custos</label>
+              <button
+                type="button"
                 onClick={() => setShowAddCategory(!showAddCategory)}
-                className="text-[9px] md:text-[11px] font-black text-emerald-500 uppercase hover:text-emerald-400 tracking-widest transition-colors border-b border-emerald-500/20 pb-0.5"
+                className="text-[9px] md:text-[10px] font-bold text-emerald-500 uppercase hover:text-emerald-400 tracking-wider transition-colors border-b border-emerald-500/20 pb-0.5"
               >
                 {showAddCategory ? '[ CANCELAR ]' : '[ + NOVO GRUPO ]'}
               </button>
             </div>
-            
+
             {!showAddCategory ? (
               <div className="relative">
                 <select
                   id="expense-category"
                   name="category"
-                  className="w-full px-5 md:px-6 py-4 md:py-5 rounded-xl md:rounded-2xl bg-black border-2 border-zinc-800 hover:border-white/30 text-white focus:border-emerald-500 outline-none transition-all appearance-none uppercase text-[10px] md:text-[12px] font-black tracking-[0.1em] md:tracking-[0.2em] shadow-inner"
+                  className="w-full px-4 md:px-5 py-3 md:py-4 rounded-xl bg-black border border-zinc-800 hover:border-white/20 text-white focus:border-emerald-500 outline-none transition-all appearance-none uppercase text-[10px] md:text-xs font-bold tracking-wider shadow-inner"
                   value={formData.category}
                   onChange={(e) => {
                     setFormData({ ...formData, category: e.target.value });
@@ -257,8 +257,8 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({
                     <option key={cat} value={cat}>{cat}</option>
                   ))}
                 </select>
-                <div className="absolute right-5 top-1/2 -translate-y-1/2 pointer-events-none text-zinc-600">
-                  <ChevronDown className="w-5 h-5" />
+                <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-zinc-600">
+                  <ChevronDown className="w-4 h-4" />
                 </div>
               </div>
             ) : (
@@ -273,7 +273,7 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({
                   onChange={(e) => setNewCategory(e.target.value)}
                   autoFocus
                 />
-                <button 
+                <button
                   type="button"
                   onClick={handleCreateCategory}
                   className="w-full sm:w-auto px-8 py-4 sm:py-0 bg-emerald-500 border-2 border-emerald-400 rounded-xl md:rounded-2xl text-black font-black text-[10px] md:text-[12px] uppercase hover:bg-emerald-400 active:scale-95 transition-all bubble-btn"
@@ -284,18 +284,18 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({
             )}
           </div>
 
-          <div className="pt-6 md:pt-10 flex flex-col gap-4 md:gap-5">
-            <div className="flex flex-col sm:flex-row gap-4 md:gap-6">
+          <div className="pt-4 md:pt-6 flex flex-col gap-3 md:gap-4">
+            <div className="flex flex-col sm:flex-row gap-3 md:gap-4">
               <button
                 type="button"
                 onClick={onClose}
-                className="order-2 sm:order-1 flex-1 px-6 py-4 md:py-5 border-2 border-zinc-950 hover:border-white/20 rounded-xl md:rounded-2xl text-zinc-500 font-black uppercase text-[10px] md:text-[12px] tracking-[0.2em] hover:bg-white/5 transition-all active:scale-95 bubble-btn"
+                className="order-2 sm:order-1 flex-1 px-4 py-3 md:py-4 border border-zinc-950 hover:border-white/20 rounded-xl text-zinc-500 font-bold uppercase text-[10px] md:text-xs tracking-wider hover:bg-white/5 transition-all active:scale-95 bubble-btn"
               >
                 Descartar
               </button>
               <button
                 type="submit"
-                className="order-1 sm:order-2 flex-[1.5] px-6 py-4 md:py-5 bg-white text-black border-2 border-transparent hover:border-emerald-500 rounded-xl md:rounded-2xl font-black uppercase text-[10px] md:text-[12px] tracking-[0.2em] hover:bg-emerald-400 flex items-center justify-center gap-3 transition-all active:scale-95 bubble-btn"
+                className="order-1 sm:order-2 flex-[1.5] px-4 py-3 md:py-4 bg-white text-black border border-transparent hover:border-emerald-500 rounded-xl font-bold uppercase text-[10px] md:text-xs tracking-wider hover:bg-emerald-400 flex items-center justify-center gap-2 transition-all active:scale-95 bubble-btn"
               >
                 <Check className="w-4 h-4 md:w-5 md:h-5" />
                 {initialData ? 'Atualizar' : 'Lançar'}
@@ -306,7 +306,7 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({
               <button
                 type="button"
                 onClick={handleDelete}
-                className="w-full px-6 py-4 md:py-5 bg-red-600/5 border-2 border-red-500/30 hover:border-red-400 text-red-500 rounded-xl md:rounded-2xl font-black uppercase text-[10px] md:text-[12px] tracking-[0.1em] md:tracking-[0.2em] hover:bg-red-600 hover:text-white transition-all flex items-center justify-center gap-4 group active:scale-95 bubble-btn"
+                className="w-full px-4 py-3 md:py-4 bg-red-600/5 border border-red-500/20 hover:border-red-400 text-red-500 rounded-xl font-bold uppercase text-[10px] md:text-xs tracking-wider hover:bg-red-600 hover:text-white transition-all flex items-center justify-center gap-3 group active:scale-95 bubble-btn"
               >
                 <Trash2 className="w-4 h-4 md:w-5 md:h-5" />
                 Remover permanentemente

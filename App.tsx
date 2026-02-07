@@ -42,7 +42,7 @@ const ModernLogo = () => (
     <div className="absolute inset-0 bg-emerald-500/10 rounded-2xl blur-2xl group-hover:bg-emerald-500/30 transition-all duration-700 animate-pulse"></div>
     <div className="absolute inset-0 border border-emerald-500/20 rounded-2xl rotate-45 group-hover:rotate-90 transition-transform duration-1000"></div>
     <div className="absolute inset-0 border border-emerald-500/40 rounded-xl -rotate-12 group-hover:rotate-0 transition-transform duration-700 bg-emerald-950/10 backdrop-blur-sm"></div>
-    <div className="relative z-10 w-9 h-9 md:w-11 md:h-11 bg-black border-2 border-emerald-500/50 rounded-xl flex items-center justify-center shadow-[4px_-4px_10px_rgba(16,185,129,0.2)] overflow-hidden">
+    <div className="relative z-10 w-9 h-9 md:w-11 md:h-11 bg-black border border-emerald-500/50 rounded-xl flex items-center justify-center shadow-[4px_-4px_10px_rgba(16,185,129,0.2)] overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 to-transparent"></div>
       <Database className="w-5 h-5 md:w-6 md:h-6 text-emerald-500 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500" />
       <div className="absolute top-1 right-1 w-1 h-1 bg-emerald-400 rounded-full animate-ping"></div>
@@ -273,36 +273,36 @@ const App: React.FC = () => {
 
       {expandedChart && (
         <div className="fixed inset-0 z-[100] bg-black/95 backdrop-blur-3xl flex items-center justify-center p-4 animate-in fade-in duration-300">
-          <div className="bg-zinc-900/50 border-4 border-white/10 rounded-[2rem] md:rounded-[3rem] w-full h-full max-w-6xl flex flex-col p-6 md:p-10 relative overflow-hidden shadow-2xl bubble-card">
-            <div className="flex items-center justify-between mb-6 md:mb-10">
-              <h2 className="text-sm md:text-xl font-black text-white uppercase tracking-[0.2em] md:tracking-[0.4em] italic">
+          <div className="bg-zinc-900/50 border border-white/10 rounded-2xl md:rounded-3xl w-full h-full max-w-5xl flex flex-col p-4 md:p-6 relative overflow-hidden shadow-2xl bubble-card">
+            <div className="flex items-center justify-between mb-4 md:mb-6">
+              <h2 className="text-sm md:text-lg font-bold text-white uppercase tracking-wider italic">
                 {expandedChart === 'bar' ? "Faturamento vs Despesas" : "Análise Estratégica"}
               </h2>
-              <button onClick={() => setExpandedChart(null)} className="p-2 md:p-4 bg-white/5 hover:bg-red-500 text-white rounded-xl md:rounded-2xl transition-all border-2 border-transparent hover:border-white/20 bubble-btn"><X className="w-6 h-6 md:w-8 md:h-8" /></button>
+              <button onClick={() => setExpandedChart(null)} className="p-2 bg-white/5 hover:bg-red-500 text-white rounded-lg transition-all border border-transparent hover:border-white/20 bubble-btn"><X className="w-5 h-5" /></button>
             </div>
             <div className="flex-1 w-full overflow-hidden">
               {expandedChart === 'pie' ? (
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
-                    <Pie data={pieData} cx="50%" cy="50%" innerRadius={window.innerWidth < 768 ? 60 : 140} outerRadius={window.innerWidth < 768 ? 100 : 220} paddingAngle={8} dataKey="value" nameKey="name" label={window.innerWidth > 768 ? ({ name, value }) => `${name}: ${formatCurrency(value)}` : false}>
-                      {pieData.map((entry, index) => <Cell key={`cell-${index}`} fill={CHART_COLORS[index % CHART_COLORS.length]} stroke="rgba(0,0,0,0.6)" strokeWidth={3} />)}
+                    <Pie data={pieData} cx="50%" cy="50%" innerRadius={window.innerWidth < 768 ? 60 : 120} outerRadius={window.innerWidth < 768 ? 90 : 180} paddingAngle={4} dataKey="value" nameKey="name" label={window.innerWidth > 768 ? ({ name, value }) => `${name}` : false}>
+                      {pieData.map((entry, index) => <Cell key={`cell-${index}`} fill={CHART_COLORS[index % CHART_COLORS.length]} stroke="rgba(0,0,0,0.6)" strokeWidth={2} />)}
                     </Pie>
                     <Tooltip content={<CustomPieTooltip />} />
-                    <Legend verticalAlign="bottom" height={36} wrapperStyle={{ color: '#fff', fontWeight: '900', textTransform: 'uppercase', fontSize: window.innerWidth < 768 ? '10px' : '14px' }} />
+                    <Legend verticalAlign="bottom" height={36} wrapperStyle={{ color: '#fff', fontWeight: 'bold', textTransform: 'uppercase', fontSize: window.innerWidth < 768 ? '10px' : '12px' }} />
                   </PieChart>
                 </ResponsiveContainer>
               ) : (
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={comparisonData} margin={{ top: 20, right: 20, left: 0, bottom: 20 }}>
                     <CartesianGrid strokeDasharray="6 6" stroke="#222" vertical={false} />
-                    <XAxis dataKey="name" stroke="#fff" fontSize={window.innerWidth < 768 ? 8 : 14} fontWeight="black" />
-                    <YAxis stroke="#555" fontSize={window.innerWidth < 768 ? 8 : 14} tickFormatter={(val) => `R$${val / 1000}k`} />
-                    <Tooltip cursor={false} contentStyle={{ backgroundColor: '#000', border: '2px solid rgba(16,185,129,0.3)', borderRadius: '20px' }} formatter={(value: number) => [formatCurrency(value), 'Valor']} />
-                    <Bar dataKey="value" radius={[10, 10, 0, 0]} barSize={window.innerWidth < 768 ? 40 : 200}>
+                    <XAxis dataKey="name" stroke="#fff" fontSize={window.innerWidth < 768 ? 8 : 12} fontWeight="bold" />
+                    <YAxis stroke="#555" fontSize={window.innerWidth < 768 ? 8 : 12} tickFormatter={(val) => `R$${val / 1000}k`} />
+                    <Tooltip cursor={false} contentStyle={{ backgroundColor: '#000', border: '1px solid rgba(16,185,129,0.3)', borderRadius: '12px' }} formatter={(value: number) => [formatCurrency(value), 'Valor']} />
+                    <Bar dataKey="value" radius={[6, 6, 0, 0]} barSize={window.innerWidth < 768 ? 30 : 120}>
                       {comparisonData.map((entry, index) => <Cell key={`cell-${index}`} fill={entry.fill} />)}
                       <LabelList dataKey="value" position="top" content={(props: any) => {
                         const { x, y, width, value } = props;
-                        return <text x={x + width / 2} y={y - 10} fill="#fff" textAnchor="middle" fontSize={window.innerWidth < 768 ? 10 : 16} fontWeight="black">{window.innerWidth < 768 ? `R$${(value / 1000).toFixed(0)}k` : formatCurrency(value)}</text>;
+                        return <text x={x + width / 2} y={y - 10} fill="#fff" textAnchor="middle" fontSize={window.innerWidth < 768 ? 10 : 14} fontWeight="bold">{window.innerWidth < 768 ? `R$${(value / 1000).toFixed(0)}k` : formatCurrency(value)}</text>;
                       }} />
                     </Bar>
                   </BarChart>
@@ -315,24 +315,24 @@ const App: React.FC = () => {
 
       {isRevenueModalOpen && (
         <div className="fixed inset-0 z-[101] bg-black/95 backdrop-blur-2xl flex items-center justify-center p-4 md:p-6 animate-in fade-in zoom-in duration-300">
-          <div className="bg-zinc-900 rounded-[2.5rem] md:rounded-[3rem] w-full max-w-md shadow-2xl border-2 border-white/10 hover:border-white/30 transition-all overflow-hidden relative group bubble-card">
+          <div className="bg-zinc-900 rounded-2xl md:rounded-3xl w-full max-w-md shadow-2xl border border-white/10 hover:border-white/20 transition-all overflow-hidden relative group bubble-card">
             <CornerBubble />
-            <div className="p-6 md:p-10 border-b border-white/5 bg-black/40 flex items-center justify-between">
-              <h3 className="text-white font-black uppercase tracking-widest italic text-sm md:text-base">Lançar Novo Aporte</h3>
-              <button onClick={() => setIsRevenueModalOpen(false)} className="text-zinc-500 hover:text-white p-2 hover:bg-white/5 rounded-xl transition-colors"><X className="w-6 h-6" /></button>
+            <div className="p-4 md:p-6 border-b border-white/5 bg-black/40 flex items-center justify-between">
+              <h3 className="text-white font-bold uppercase tracking-wider italic text-sm md:text-base">Lançar Novo Aporte</h3>
+              <button onClick={() => setIsRevenueModalOpen(false)} className="text-zinc-500 hover:text-white p-2 hover:bg-white/5 rounded-lg transition-colors"><X className="w-5 h-5" /></button>
             </div>
-            <div className="p-6 md:p-10 space-y-6 md:space-y-8">
-              <div className="space-y-3">
-                <label htmlFor="rev-amount" className="text-[10px] md:text-[11px] font-black text-zinc-500 uppercase tracking-widest">Valor Bruto (BRL)</label>
+            <div className="p-4 md:p-6 space-y-4 md:space-y-6">
+              <div className="space-y-2">
+                <label htmlFor="rev-amount" className="text-[10px] md:text-xs font-bold text-zinc-500 uppercase tracking-wider">Valor Bruto (BRL)</label>
                 <div className="relative">
-                  <span className="absolute left-6 top-1/2 -translate-y-1/2 text-sm font-black text-zinc-600">R$</span>
+                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-sm font-bold text-zinc-600">R$</span>
                   <input
                     id="rev-amount"
                     ref={revInputRef}
                     name="revenueAmount"
                     type="text"
                     inputMode="decimal"
-                    className="w-full bg-black border-2 border-zinc-800 rounded-2xl pl-14 pr-6 py-4 md:py-5 text-xl md:text-2xl font-black text-emerald-500 focus:border-emerald-500 outline-none transition-all shadow-inner"
+                    className="w-full bg-black border border-zinc-800 rounded-xl pl-12 pr-4 py-3 md:py-4 text-lg md:text-xl font-bold text-emerald-500 focus:border-emerald-500 outline-none transition-all shadow-inner"
                     value={tempRevenue}
                     onChange={(e) => {
                       const val = e.target.value.replace(',', '.');
@@ -344,38 +344,38 @@ const App: React.FC = () => {
                 </div>
               </div>
 
-              <div className="space-y-3">
-                <label htmlFor="rev-date" className="text-[10px] md:text-[11px] font-black text-zinc-500 uppercase tracking-widest">Data do Aporte</label>
+              <div className="space-y-2">
+                <label htmlFor="rev-date" className="text-[10px] md:text-xs font-bold text-zinc-500 uppercase tracking-wider">Data do Aporte</label>
                 <input
                   id="rev-date"
                   name="revenueDate"
                   type="date"
-                  className="w-full bg-black border-2 border-zinc-800 rounded-2xl px-6 py-4 md:py-5 text-white focus:border-emerald-500 outline-none font-bold transition-all shadow-inner"
+                  className="w-full bg-black border border-zinc-800 rounded-xl px-4 py-3 md:py-4 text-white focus:border-emerald-500 outline-none font-bold transition-all shadow-inner text-sm"
                   value={tempRevenueDate}
                   onChange={(e) => setTempRevenueDate(e.target.value)}
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-3">
-                  <label htmlFor="rev-start-date" className="text-[10px] md:text-[11px] font-black text-zinc-500 uppercase tracking-widest">Data Inicial</label>
+                <div className="space-y-2">
+                  <label htmlFor="rev-start-date" className="text-[10px] md:text-xs font-bold text-zinc-500 uppercase tracking-wider">Data Inicial</label>
                   <input
                     id="rev-start-date"
                     name="revenueStartDate"
                     type="date"
-                    className="w-full bg-black border-2 border-zinc-800 rounded-2xl px-4 py-4 md:py-5 text-white focus:border-emerald-500 outline-none font-bold transition-all shadow-inner text-xs hover:cursor-pointer"
+                    className="w-full bg-black border border-zinc-800 rounded-xl px-4 py-3 md:py-4 text-white focus:border-emerald-500 outline-none font-bold transition-all shadow-inner text-xs hover:cursor-pointer"
                     value={tempRevenueStartDate}
                     onChange={(e) => setTempRevenueStartDate(e.target.value)}
                     onClick={(e) => e.currentTarget.showPicker()}
                   />
                 </div>
-                <div className="space-y-3">
-                  <label htmlFor="rev-end-date" className="text-[10px] md:text-[11px] font-black text-zinc-500 uppercase tracking-widest">Data Final</label>
+                <div className="space-y-2">
+                  <label htmlFor="rev-end-date" className="text-[10px] md:text-xs font-bold text-zinc-500 uppercase tracking-wider">Data Final</label>
                   <input
                     id="rev-end-date"
                     name="revenueEndDate"
                     type="date"
-                    className="w-full bg-black border-2 border-zinc-800 rounded-2xl px-4 py-4 md:py-5 text-white focus:border-emerald-500 outline-none font-bold transition-all shadow-inner text-xs hover:cursor-pointer"
+                    className="w-full bg-black border border-zinc-800 rounded-xl px-4 py-3 md:py-4 text-white focus:border-emerald-500 outline-none font-bold transition-all shadow-inner text-xs hover:cursor-pointer"
                     value={tempRevenueEndDate}
                     onChange={(e) => setTempRevenueEndDate(e.target.value)}
                     onClick={(e) => e.currentTarget.showPicker()}
@@ -386,7 +386,7 @@ const App: React.FC = () => {
               <button
                 onClick={handleSaveRevenue}
                 disabled={saveStatus !== 'idle'}
-                className={`w-full py-4 md:py-5 rounded-2xl font-black uppercase text-[11px] md:text-[12px] tracking-[0.2em] shadow-xl transition-all active:scale-95 group relative overflow-hidden flex items-center justify-center gap-3 bubble-btn ${saveStatus === 'success' ? 'bg-white text-black' : 'bg-emerald-500 text-black hover:bg-emerald-400'}`}
+                className={`w-full py-3 md:py-4 rounded-xl font-bold uppercase text-xs tracking-widest shadow-lg transition-all active:scale-95 group relative overflow-hidden flex items-center justify-center gap-2 bubble-btn ${saveStatus === 'success' ? 'bg-white text-black' : 'bg-emerald-500 text-black hover:bg-emerald-400'}`}
               >
                 {saveStatus === 'idle' && 'Confirmar Lançamento'}
                 {saveStatus === 'saving' && <div className="w-5 h-5 border-2 border-black border-t-transparent rounded-full animate-spin"></div>}
@@ -402,7 +402,7 @@ const App: React.FC = () => {
         </div>
       )}
 
-      <header className="sticky top-0 z-50 bg-black/95 border-b-2 border-emerald-500/20 backdrop-blur-3xl px-4 md:px-6 py-4 md:py-5 shadow-2xl">
+      <header className="sticky top-0 z-50 bg-black/95 border-b border-emerald-500/20 backdrop-blur-3xl px-4 md:px-6 py-4 md:py-5 shadow-2xl">
         <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-4 md:gap-6 w-full lg:w-auto justify-between lg:justify-start">
             <div className="flex items-center gap-4">
@@ -436,9 +436,9 @@ const App: React.FC = () => {
             </div>
           </div>
 
-          <div className="flex items-center bg-zinc-900/80 p-1 rounded-2xl border-2 border-emerald-500 shadow-inner w-full lg:w-auto justify-center">
-            <button onClick={() => setCurrentView('current')} className={`flex-1 lg:flex-none px-4 md:px-10 py-2.5 md:py-3 rounded-xl text-[10px] md:text-[12px] font-black uppercase tracking-[0.1em] transition-all flex items-center justify-center gap-2 md:gap-3 bubble-btn border-2 ${currentView === 'current' ? 'bg-emerald-500 border-emerald-400 text-black shadow-xl ring-2 ring-emerald-400/50' : 'text-zinc-500 hover:text-white border-emerald-500/20 hover:border-emerald-500/50'}`}><Cpu className="w-4 h-4" />Operações</button>
-            <button onClick={() => setCurrentView('analytics')} className={`flex-1 lg:flex-none px-4 md:px-10 py-2.5 md:py-3 rounded-xl text-[10px] md:text-[12px] font-black uppercase tracking-[0.1em] transition-all flex items-center justify-center gap-2 md:gap-3 bubble-btn border-2 ${currentView === 'analytics' ? 'bg-emerald-500 border-emerald-400 text-black shadow-xl ring-2 ring-emerald-400/50' : 'text-zinc-500 hover:text-white border-emerald-500/20 hover:border-emerald-500/50'}`}><BarChart3 className="w-4 h-4" />Insights</button>
+          <div className="flex items-center bg-zinc-900/80 p-1 rounded-2xl border border-emerald-500 shadow-inner w-full lg:w-auto justify-center">
+            <button onClick={() => setCurrentView('current')} className={`flex-1 lg:flex-none px-4 md:px-8 py-2 md:py-3 rounded-xl text-[10px] md:text-xs font-bold uppercase tracking-wider transition-all flex items-center justify-center gap-2 bubble-btn border ${currentView === 'current' ? 'bg-emerald-500 border-emerald-400 text-black shadow-lg ring-1 ring-emerald-400/50' : 'text-zinc-500 hover:text-white border-emerald-500/20 hover:border-emerald-500/50'}`}><Cpu className="w-4 h-4" />Operações</button>
+            <button onClick={() => setCurrentView('analytics')} className={`flex-1 lg:flex-none px-4 md:px-8 py-2 md:py-3 rounded-xl text-[10px] md:text-xs font-bold uppercase tracking-wider transition-all flex items-center justify-center gap-2 bubble-btn border ${currentView === 'analytics' ? 'bg-emerald-500 border-emerald-400 text-black shadow-lg ring-1 ring-emerald-400/50' : 'text-zinc-500 hover:text-white border-emerald-500/20 hover:border-emerald-500/50'}`}><BarChart3 className="w-4 h-4" />Insights</button>
           </div>
 
           <div className="flex flex-wrap items-center justify-center lg:justify-end gap-3 md:gap-4 w-full lg:w-auto">
@@ -446,17 +446,17 @@ const App: React.FC = () => {
               onClick={handleManualSave}
               title="Sincronizar Banco de Dados"
               disabled={manualSaveStatus !== 'idle'}
-              className={`flex items-center gap-2 md:gap-3 px-4 md:px-6 py-3 md:py-4 rounded-xl md:rounded-2xl border-2 transition-all shadow-2xl active:scale-95 bubble-btn ${manualSaveStatus === 'saved' ? 'bg-emerald-500 border-emerald-400 text-black shadow-[0_0_20px_rgba(16,185,129,0.5)]' : 'bg-zinc-900 border-emerald-500 text-emerald-500 hover:border-emerald-500 hover:bg-emerald-500/10'}`}
+              className={`flex items-center gap-2 md:gap-3 px-4 md:px-5 py-3 md:py-3.5 rounded-xl md:rounded-2xl border transition-all shadow-xl active:scale-95 bubble-btn ${manualSaveStatus === 'saved' ? 'bg-emerald-500 border-emerald-400 text-black shadow-[0_0_20px_rgba(16,185,129,0.5)]' : 'bg-zinc-900 border-emerald-500 text-emerald-500 hover:border-emerald-500 hover:bg-emerald-500/10'}`}
             >
               <Save className="w-4 h-4 md:w-5 md:h-5" />
-              <span className="text-[9px] md:text-[11px] font-black uppercase tracking-widest hidden sm:inline">Salvar</span>
+              <span className="text-[9px] md:text-xs font-bold uppercase tracking-wider hidden sm:inline">Salvar</span>
             </button>
 
             <div className="flex flex-col items-center gap-1.5">
-              <button onClick={() => { setEditingExpense(null); setIsFormOpen(true); }} className="bg-white text-black hover:bg-emerald-400 border-2 border-transparent hover:border-white/40 px-5 md:px-8 py-3 md:py-4 rounded-xl md:rounded-2xl font-black text-[10px] md:text-[12px] uppercase transition-all shadow-2xl active:scale-95 flex items-center gap-2 md:gap-3 group relative overflow-hidden bubble-btn">
+              <button onClick={() => { setEditingExpense(null); setIsFormOpen(true); }} className="bg-white text-black hover:bg-emerald-400 border border-transparent hover:border-white/40 px-5 md:px-6 py-3 md:py-3.5 rounded-xl md:rounded-2xl font-black text-[10px] md:text-xs uppercase transition-all shadow-xl active:scale-95 flex items-center gap-2 md:gap-3 group relative overflow-hidden bubble-btn">
                 <Plus className="w-4 h-4 md:w-5 md:h-5" /> <span className="hidden sm:inline">Novo Lançamento</span><span className="sm:hidden">Novo</span>
               </button>
-              <div className="text-[8px] md:text-[9px] font-black text-emerald-500/80 uppercase tracking-[0.1em] italic leading-none whitespace-nowrap">
+              <div className="text-[8px] md:text-[9px] font-bold text-emerald-500/80 uppercase tracking-widest italic leading-none whitespace-nowrap">
                 {currentTime.toLocaleDateString('pt-BR')} - {currentTime.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
               </div>
             </div>
@@ -464,14 +464,14 @@ const App: React.FC = () => {
             <div className="flex flex-row lg:flex-col gap-2">
               <button
                 onClick={scrollToTop}
-                className="p-3 bg-zinc-900 text-zinc-500 border-2 border-white/5 rounded-xl transition-all shadow-2xl active:scale-95 hover:bg-emerald-500/10 hover:border-emerald-500 hover:text-emerald-500 bubble-btn"
+                className="p-3 bg-zinc-900 text-zinc-500 border border-white/5 rounded-xl transition-all shadow-xl active:scale-95 hover:bg-emerald-500/10 hover:border-emerald-500 hover:text-emerald-500 bubble-btn"
                 title="Topo"
               >
                 <ChevronUp className="w-4 h-4" />
               </button>
               <button
                 onClick={scrollToBottom}
-                className="p-3 bg-zinc-900 text-zinc-500 border-2 border-white/5 rounded-xl transition-all shadow-2xl active:scale-95 hover:bg-emerald-500/10 hover:border-emerald-500 hover:text-emerald-500 bubble-btn"
+                className="p-3 bg-zinc-900 text-zinc-500 border border-white/5 rounded-xl transition-all shadow-xl active:scale-95 hover:bg-emerald-500/10 hover:border-emerald-500 hover:text-emerald-500 bubble-btn"
                 title="Fim"
               >
                 <ChevronDown className="w-4 h-4" />
@@ -482,47 +482,47 @@ const App: React.FC = () => {
       </header>
 
       <main className="max-w-7xl mx-auto px-4 md:px-6 py-6 md:py-10 bg-[#292929]">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8 mb-8 md:mb-12 relative">
-          <div className="bg-black/40 backdrop-blur-3xl rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-10 border-4 border-zinc-700 hover:border-zinc-600 transition-all group shadow-2xl relative overflow-hidden hover:-translate-y-1 active:scale-[0.99] bubble-card">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 mb-6 md:mb-10 relative">
+          <div className="bg-black/40 backdrop-blur-3xl rounded-2xl md:rounded-3xl p-4 md:p-6 border border-zinc-700/50 hover:border-zinc-600 transition-all group shadow-lg relative overflow-hidden hover:-translate-y-1 active:scale-[0.99] bubble-card">
             <CornerBubble color="zinc" />
-            <div className="flex items-center gap-3 mb-6 md:mb-8">
-              <Calendar className="w-4 h-4 md:w-5 md:h-5 text-emerald-500" />
-              <span className="text-[10px] md:text-[12px] font-black uppercase tracking-[0.2em] text-zinc-400 italic">Período de Análise</span>
+            <div className="flex items-center gap-2 mb-4 md:mb-6">
+              <Calendar className="w-4 h-4 text-emerald-500" />
+              <span className="text-[10px] md:text-xs font-bold uppercase tracking-wider text-zinc-400 italic">Período de Análise</span>
             </div>
-            <div className="flex flex-col sm:flex-row items-center gap-4 md:gap-8">
-              <div className="w-full sm:flex-1 space-y-2 md:space-y-3">
-                <label htmlFor="filter-start" className="text-[9px] md:text-[11px] text-zinc-500 font-black uppercase tracking-wider">Início</label>
-                <input id="filter-start" name="startDate" type="date" className="w-full bg-black border-2 border-zinc-800 rounded-xl md:rounded-2xl px-4 md:px-5 py-3 md:py-4 text-white focus:border-emerald-500 outline-none font-bold transition-all shadow-inner text-sm hover:cursor-pointer" value={startDate} onChange={(e) => setStartDate(e.target.value)} onClick={(e) => e.currentTarget.showPicker()} />
+            <div className="flex flex-col sm:flex-row items-center gap-4">
+              <div className="w-full sm:flex-1 space-y-2">
+                <label htmlFor="filter-start" className="text-[9px] md:text-[10px] text-zinc-500 font-bold uppercase tracking-wider">Início</label>
+                <input id="filter-start" name="startDate" type="date" className="w-full bg-black border border-zinc-800 rounded-xl px-4 py-3 text-white focus:border-emerald-500 outline-none font-bold transition-all shadow-inner text-sm hover:cursor-pointer" value={startDate} onChange={(e) => setStartDate(e.target.value)} onClick={(e) => e.currentTarget.showPicker()} />
               </div>
-              <div className="w-full sm:flex-1 space-y-2 md:space-y-3">
-                <label htmlFor="filter-end" className="text-[9px] md:text-[11px] text-zinc-500 font-black uppercase tracking-wider">Fim</label>
-                <input id="filter-end" name="endDate" type="date" className="w-full bg-black border-2 border-zinc-800 rounded-xl md:rounded-2xl px-4 md:px-5 py-3 md:py-4 text-white focus:border-emerald-500 outline-none font-bold transition-all shadow-inner text-sm hover:cursor-pointer" value={endDate} onChange={(e) => setEndDate(e.target.value)} onClick={(e) => e.currentTarget.showPicker()} />
+              <div className="w-full sm:flex-1 space-y-2">
+                <label htmlFor="filter-end" className="text-[9px] md:text-[10px] text-zinc-500 font-bold uppercase tracking-wider">Fim</label>
+                <input id="filter-end" name="endDate" type="date" className="w-full bg-black border border-zinc-800 rounded-xl px-4 py-3 text-white focus:border-emerald-500 outline-none font-bold transition-all shadow-inner text-sm hover:cursor-pointer" value={endDate} onChange={(e) => setEndDate(e.target.value)} onClick={(e) => e.currentTarget.showPicker()} />
               </div>
             </div>
           </div>
 
-          <div className="bg-black/40 backdrop-blur-3xl rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-10 border-4 border-zinc-700 hover:border-zinc-600 flex flex-col md:flex-row items-center justify-between gap-6 relative group overflow-hidden shadow-2xl hover:-translate-y-1 transition-all active:scale-[0.99] bubble-card">
+          <div className="bg-black/40 backdrop-blur-3xl rounded-2xl md:rounded-3xl p-4 md:p-6 border border-zinc-700/50 hover:border-zinc-600 flex flex-col md:flex-row items-center justify-between gap-4 relative group overflow-hidden shadow-lg hover:-translate-y-1 transition-all active:scale-[0.99] bubble-card">
             <CornerBubble color="emerald" />
-            <div className="flex items-center gap-4 md:gap-6 relative z-10 w-full md:w-auto">
-              <div className="w-12 h-12 md:w-16 md:h-16 bg-emerald-500/10 rounded-xl md:rounded-2xl flex items-center justify-center border-2 border-emerald-500/30 group-hover:border-emerald-400 transition-colors shadow-inner shrink-0">
-                <Landmark className="w-6 h-6 md:w-8 md:h-8 text-emerald-500" />
+            <div className="flex items-center gap-4 relative z-10 w-full md:w-auto">
+              <div className="w-10 h-10 md:w-14 md:h-14 bg-emerald-500/10 rounded-xl flex items-center justify-center border border-emerald-500/30 group-hover:border-emerald-400 transition-colors shadow-inner shrink-0">
+                <Landmark className="w-5 h-5 md:w-8 md:h-8 text-emerald-500" />
               </div>
               <div className="flex-1 flex flex-col relative overflow-hidden">
-                <span className="text-[9px] md:text-[11px] font-black text-zinc-500 uppercase block mb-1 tracking-widest italic">Faturamento</span>
+                <span className="text-[9px] md:text-[10px] font-bold text-zinc-500 uppercase block mb-1 tracking-wider italic">Faturamento</span>
                 <div className="flex flex-col">
-                  <div className="text-2xl md:text-4xl font-black text-white tracking-tighter drop-shadow-md truncate">{formatCurrency(revenue)}</div>
+                  <div className="text-xl md:text-3xl font-black text-white tracking-tight drop-shadow-md truncate">{formatCurrency(revenue)}</div>
                 </div>
               </div>
             </div>
             <div className="relative z-10 w-full md:w-auto flex flex-row md:flex-col gap-2 justify-center">
               <button
                 onClick={() => setIsRevenueModalOpen(true)}
-                className="flex-1 md:flex-none bg-emerald-600 hover:bg-emerald-500 text-white border-2 border-emerald-400/30 hover:border-white/50 px-4 py-2.5 rounded-xl transition-all flex items-center justify-center gap-2 shadow-lg text-[9px] font-black uppercase relative active:scale-95 bubble-btn"
+                className="flex-1 md:flex-none bg-emerald-600 hover:bg-emerald-500 text-white border border-emerald-400/30 hover:border-white/50 px-3 py-2 rounded-lg transition-all flex items-center justify-center gap-1.5 shadow-md text-[9px] font-bold uppercase relative active:scale-95 bubble-btn"
               >
                 <ArrowUpRight className="w-3 h-3" />
                 Atualizar
               </button>
-              <button onClick={exportToExcel} className="flex-1 md:flex-none bg-zinc-800 hover:bg-emerald-500 text-zinc-400 hover:text-black border-2 border-white/5 hover:border-white/40 px-4 py-2.5 rounded-xl transition-all flex items-center justify-center gap-2 shadow-lg text-[9px] font-black uppercase relative bubble-btn">
+              <button onClick={exportToExcel} className="flex-1 md:flex-none bg-zinc-800 hover:bg-emerald-500 text-zinc-400 hover:text-black border border-white/5 hover:border-white/40 px-3 py-2 rounded-lg transition-all flex items-center justify-center gap-1.5 shadow-md text-[9px] font-bold uppercase relative bubble-btn">
                 <FileSpreadsheet className="w-3 h-3" />
                 Exportar
               </button>
@@ -551,7 +551,7 @@ const App: React.FC = () => {
                       name="mainSearch"
                       type="text"
                       placeholder="LOCALIZAR..."
-                      className="pl-12 pr-6 py-3 md:py-4 bg-zinc-900/60 border-2 border-zinc-800 rounded-xl md:rounded-2xl text-[10px] md:text-[12px] font-bold text-white outline-none focus:border-emerald-500 transition-all w-full md:w-80 uppercase tracking-widest shadow-lg"
+                      className="pl-12 pr-6 py-3 md:py-3.5 bg-zinc-900/60 border border-zinc-800 rounded-xl md:rounded-2xl text-[10px] md:text-xs font-bold text-white outline-none focus:border-emerald-500 transition-all w-full md:w-80 uppercase tracking-wider shadow-lg"
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
                     />
@@ -562,47 +562,47 @@ const App: React.FC = () => {
                 </div>
               </div>
             ) : (
-              <div className="animate-in fade-in slide-in-from-bottom-5 duration-700 space-y-8 md:space-y-12">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12">
-                  <div className="glass rounded-[2rem] md:rounded-[3rem] p-6 md:p-12 border-4 border-white/10 hover:border-white/30 flex flex-col items-center relative group shadow-2xl hover:-translate-y-1 transition-all bubble-card">
+              <div className="animate-in fade-in slide-in-from-bottom-5 duration-700 space-y-6 md:space-y-10">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
+                  <div className="glass rounded-2xl md:rounded-3xl p-6 md:p-8 border border-white/10 hover:border-white/20 flex flex-col items-center relative group shadow-xl hover:-translate-y-1 transition-all bubble-card">
                     <CornerBubble color="emerald" />
-                    <button onClick={() => setExpandedChart('pie')} className="absolute bottom-6 md:bottom-8 right-6 md:right-8 p-3 md:p-4 bg-white/5 hover:bg-emerald-500 text-white rounded-xl md:rounded-2xl transition-all border-2 border-transparent hover:border-white/40 shadow-xl z-20 bubble-btn"><Maximize2 className="w-4 h-4 md:w-5 md:h-5" /></button>
-                    <div className="w-full h-[300px] md:h-[450px]">
-                      <h3 className="text-[10px] md:text-[12px] font-black text-white uppercase tracking-[0.2em] md:tracking-[0.3em] mb-4 text-center italic">Despesas por Descritivo</h3>
+                    <button onClick={() => setExpandedChart('pie')} className="absolute bottom-4 md:bottom-6 right-4 md:right-6 p-2 md:p-3 bg-white/5 hover:bg-emerald-500 text-white rounded-lg md:rounded-xl transition-all border border-transparent hover:border-white/40 shadow-lg z-20 bubble-btn"><Maximize2 className="w-4 h-4" /></button>
+                    <div className="w-full h-[250px] md:h-[350px]">
+                      <h3 className="text-[10px] md:text-xs font-bold text-white uppercase tracking-wider mb-2 text-center italic">Despesas por Descritivo</h3>
                       <ResponsiveContainer width="100%" height="100%">
                         <PieChart>
                           <Pie
                             data={pieData}
                             cx="50%"
                             cy="50%"
-                            innerRadius={window.innerWidth < 768 ? 50 : 90}
-                            outerRadius={window.innerWidth < 768 ? 80 : 140}
-                            paddingAngle={6}
+                            innerRadius={window.innerWidth < 768 ? 50 : 80}
+                            outerRadius={window.innerWidth < 768 ? 80 : 120}
+                            paddingAngle={4}
                             dataKey="value"
                             nameKey="name"
                             label={false}
                           >
-                            {pieData.map((entry, index) => <Cell key={`cell-${index}`} fill={CHART_COLORS[index % CHART_COLORS.length]} stroke="rgba(0,0,0,0.5)" strokeWidth={2} />)}
+                            {pieData.map((entry, index) => <Cell key={`cell-${index}`} fill={CHART_COLORS[index % CHART_COLORS.length]} stroke="rgba(0,0,0,0.5)" strokeWidth={1} />)}
                           </Pie>
                           <Tooltip content={<CustomPieTooltip />} />
-                          <Legend verticalAlign="bottom" height={36} wrapperStyle={{ color: '#fff', fontWeight: 900, textTransform: 'uppercase', fontSize: window.innerWidth < 768 ? '8px' : '10px' }} />
+                          <Legend verticalAlign="bottom" height={36} wrapperStyle={{ color: '#fff', fontWeight: 600, textTransform: 'uppercase', fontSize: window.innerWidth < 768 ? '8px' : '10px' }} />
                         </PieChart>
                       </ResponsiveContainer>
                     </div>
                   </div>
 
-                  <div className="glass rounded-[2rem] md:rounded-[3rem] p-6 md:p-12 border-4 border-white/10 hover:border-white/30 relative group shadow-2xl hover:-translate-y-1 transition-all bubble-card">
+                  <div className="glass rounded-2xl md:rounded-3xl p-6 md:p-8 border border-white/10 hover:border-white/20 relative group shadow-xl hover:-translate-y-1 transition-all bubble-card">
                     <CornerBubble color="emerald" />
-                    <button onClick={() => setExpandedChart('bar')} className="absolute bottom-6 md:bottom-8 right-6 md:right-8 p-3 md:p-4 bg-white/5 hover:bg-emerald-500 text-white rounded-xl md:rounded-2xl transition-all border-2 border-transparent hover:border-white/40 shadow-xl z-20 bubble-btn"><Maximize2 className="w-4 h-4 md:w-5 md:h-5" /></button>
-                    <div className="w-full h-[300px] md:h-[450px]">
-                      <h3 className="text-[10px] md:text-[12px] font-black text-white uppercase tracking-[0.2em] md:tracking-[0.35em] mb-4 text-center italic uppercase">Relacional Financeiro</h3>
+                    <button onClick={() => setExpandedChart('bar')} className="absolute bottom-4 md:bottom-6 right-4 md:right-6 p-2 md:p-3 bg-white/5 hover:bg-emerald-500 text-white rounded-lg md:rounded-xl transition-all border border-transparent hover:border-white/40 shadow-lg z-20 bubble-btn"><Maximize2 className="w-4 h-4" /></button>
+                    <div className="w-full h-[250px] md:h-[350px]">
+                      <h3 className="text-[10px] md:text-xs font-bold text-white uppercase tracking-wider mb-2 text-center italic uppercase">Relacional Financeiro</h3>
                       <ResponsiveContainer width="100%" height="100%">
                         <BarChart data={comparisonData} margin={{ top: 20, right: 10, left: 0, bottom: 20 }}>
                           <CartesianGrid strokeDasharray="4 4" stroke="#1a1a1a" vertical={false} />
-                          <XAxis dataKey="name" stroke="#888" fontSize={8} fontWeight="black" tick={{ fill: '#fff' }} />
-                          <YAxis stroke="#555" fontSize={8} tickFormatter={(val) => `R$${val / 1000}k`} />
-                          <Tooltip cursor={false} contentStyle={{ backgroundColor: '#000', border: '2px solid rgba(16,185,129,0.3)', borderRadius: '20px' }} formatter={(value: number) => [formatCurrency(value), 'Valor']} />
-                          <Bar dataKey="value" radius={[10, 10, 0, 0]} barSize={window.innerWidth < 768 ? 40 : 200}>
+                          <XAxis dataKey="name" stroke="#888" fontSize={10} fontWeight="bold" tick={{ fill: '#fff' }} />
+                          <YAxis stroke="#555" fontSize={10} tickFormatter={(val) => `R$${val / 1000}k`} />
+                          <Tooltip cursor={false} contentStyle={{ backgroundColor: '#000', border: '1px solid rgba(16,185,129,0.3)', borderRadius: '12px' }} formatter={(value: number) => [formatCurrency(value), 'Valor']} />
+                          <Bar dataKey="value" radius={[6, 6, 0, 0]} barSize={window.innerWidth < 768 ? 30 : 80}>
                             {comparisonData.map((entry, index) => <Cell key={`cell-${index}`} fill={entry.fill} />)}
                           </Bar>
                         </BarChart>

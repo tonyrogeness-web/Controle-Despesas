@@ -27,9 +27,9 @@ const CornerBubble: React.FC<CornerBubbleProps> = ({ color = 'emerald' }) => {
   const current = colorClasses[color] || colorClasses.emerald;
 
   return (
-    <div className="absolute top-4 right-4 z-20 flex items-center justify-center pointer-events-none">
-      <div className={`w-6 h-6 md:w-8 md:h-8 rounded-full bg-black border-2 transition-all duration-500 ${current.border} flex items-center justify-center relative overflow-hidden shadow-lg`}>
-        <div className={`w-2 h-2 md:w-2.5 md:h-2.5 rounded-full transition-all duration-500 ${current.dot} animate-pulse`}></div>
+    <div className="absolute top-3 right-3 z-20 flex items-center justify-center pointer-events-none">
+      <div className={`w-5 h-5 md:w-6 md:h-6 rounded-full bg-black border transition-all duration-500 ${current.border} flex items-center justify-center relative overflow-hidden shadow-lg`}>
+        <div className={`w-1.5 h-1.5 md:w-2 md:h-2 rounded-full transition-all duration-500 ${current.dot} animate-pulse`}></div>
       </div>
     </div>
   );

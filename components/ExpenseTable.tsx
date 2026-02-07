@@ -30,9 +30,9 @@ const ExpenseTable: React.FC<ExpenseTableProps> = ({ expenses, onDelete, onEdit 
 
   if (expenses.length === 0) {
     return (
-      <div className="rounded-[1.5rem] md:rounded-[2.5rem] border-4 border-emerald-500/20 bg-black/40 backdrop-blur-3xl p-20 flex flex-col items-center gap-6 opacity-20 shadow-2xl">
-        <Activity className="w-16 h-16 md:w-20 md:h-20 text-zinc-500 animate-pulse" />
-        <span className="text-zinc-500 font-black uppercase tracking-[0.2em] md:tracking-[0.4em] text-[11px] md:text-[13px]">BANCO DE DADOS VAZIO</span>
+      <div className="rounded-2xl md:rounded-3xl border border-emerald-500/20 bg-black/40 backdrop-blur-3xl p-10 flex flex-col items-center gap-4 opacity-20 shadow-xl">
+        <Activity className="w-12 h-12 md:w-16 md:h-16 text-zinc-500 animate-pulse" />
+        <span className="text-zinc-500 font-bold uppercase tracking-widest text-[10px] md:text-xs">BANCO DE DADOS VAZIO</span>
       </div>
     );
   }
@@ -40,60 +40,60 @@ const ExpenseTable: React.FC<ExpenseTableProps> = ({ expenses, onDelete, onEdit 
   return (
     <div className="relative group">
       {/* Visualização para Desktop - Tabela */}
-      <div className="hidden md:block overflow-x-auto rounded-[2.5rem] border-4 border-emerald-500/20 group-hover:border-white/40 transition-all bg-black/40 backdrop-blur-3xl shadow-2xl relative custom-scrollbar">
+      <div className="hidden md:block overflow-x-auto rounded-3xl border border-emerald-500/20 group-hover:border-white/20 transition-all bg-black/40 backdrop-blur-3xl shadow-xl relative custom-scrollbar">
         <TableCornerBubble />
-        <table className="w-full text-left border-separate border-spacing-y-4 px-4">
+        <table className="w-full text-left border-separate border-spacing-y-2 px-4">
           <thead className="bg-transparent">
             <tr>
-              <th className="px-10 py-6 text-[12px] font-black text-zinc-500 uppercase tracking-[0.35em] italic border-b-2 border-white/5">Lançamento</th>
-              <th className="px-10 py-6 text-[12px] font-black text-zinc-500 uppercase tracking-[0.35em] italic border-b-2 border-white/5">Categoria</th>
-              <th className="px-10 py-6 text-[12px] font-black text-zinc-500 uppercase tracking-[0.35em] italic text-center border-b-2 border-white/5">Vencimento</th>
-              <th className="px-10 py-6 text-[12px] font-black text-zinc-500 uppercase tracking-[0.35em] italic text-right border-b-2 border-white/5">Valor (BRL)</th>
-              <th className="px-10 py-6 text-[12px] font-black text-zinc-500 uppercase tracking-[0.35em] italic text-center border-b-2 border-white/5">Ações</th>
+              <th className="px-6 py-4 text-[10px] font-bold text-zinc-500 uppercase tracking-wider italic border-b border-white/5">Lançamento</th>
+              <th className="px-6 py-4 text-[10px] font-bold text-zinc-500 uppercase tracking-wider italic border-b border-white/5">Categoria</th>
+              <th className="px-6 py-4 text-[10px] font-bold text-zinc-500 uppercase tracking-wider italic text-center border-b border-white/5">Vencimento</th>
+              <th className="px-6 py-4 text-[10px] font-bold text-zinc-500 uppercase tracking-wider italic text-right border-b border-white/5">Valor (BRL)</th>
+              <th className="px-6 py-4 text-[10px] font-bold text-zinc-500 uppercase tracking-wider italic text-center border-b border-white/5">Ações</th>
             </tr>
           </thead>
           <tbody>
             {expenses.map((exp) => (
-              <tr key={exp.id} className="hover:bg-white/[0.04] transition-all group/row">
-                <td className="px-10 py-8 relative bg-zinc-900/20 rounded-l-3xl">
-                  <div className="absolute top-0 left-0 right-0 h-[1px] bg-emerald-500/40 group-hover/row:bg-emerald-500 transition-all"></div>
-                  <div className="flex flex-col gap-1">
-                    <span className="text-base font-black text-zinc-100 uppercase tracking-widest group-hover/row:text-emerald-400 transition-colors truncate">
+              <tr key={exp.id} className="hover:bg-white/[0.02] transition-all group/row">
+                <td className="px-6 py-4 relative bg-zinc-900/20 rounded-l-2xl">
+                  <div className="absolute top-0 left-0 right-0 h-px bg-emerald-500/20 group-hover/row:bg-emerald-500/50 transition-all"></div>
+                  <div className="flex flex-col gap-0.5">
+                    <span className="text-sm font-bold text-zinc-100 uppercase tracking-wide group-hover/row:text-emerald-400 transition-colors truncate">
                       {exp.name}
                     </span>
-                    <span className="text-[10px] text-zinc-700 font-black uppercase tracking-[0.2em] flex items-center gap-2">
-                      <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></div>
+                    <span className="text-[9px] text-zinc-600 font-bold uppercase tracking-wider flex items-center gap-1.5">
+                      <div className="w-1 h-1 bg-emerald-500 rounded-full animate-pulse"></div>
                       #{exp.id.slice(0, 6).toUpperCase()}
                     </span>
                   </div>
                 </td>
-                <td className="px-10 py-8 relative bg-zinc-900/20">
-                  <div className="absolute top-0 left-0 right-0 h-[1px] bg-emerald-500/40 group-hover/row:bg-emerald-500 transition-all"></div>
-                  <span className="text-[11px] font-black text-emerald-400/80 bg-emerald-500/10 border border-emerald-500/30 px-5 py-2.5 rounded-xl uppercase tracking-[0.2em]">
+                <td className="px-6 py-4 relative bg-zinc-900/20">
+                  <div className="absolute top-0 left-0 right-0 h-px bg-emerald-500/20 group-hover/row:bg-emerald-500/50 transition-all"></div>
+                  <span className="text-[10px] font-bold text-emerald-400/80 bg-emerald-500/5 border border-emerald-500/20 px-3 py-1.5 rounded-lg uppercase tracking-wider">
                     {exp.category}
                   </span>
                 </td>
-                <td className="px-10 py-8 relative text-center bg-zinc-900/20">
-                  <div className="absolute top-0 left-0 right-0 h-[1px] bg-emerald-500/40 group-hover/row:bg-emerald-500 transition-all"></div>
-                  <div className="flex items-center justify-center gap-3 text-zinc-400 text-[13px] font-black tracking-widest italic whitespace-nowrap">
-                    <Clock className="w-3.5 h-3.5 text-emerald-500/60" />
+                <td className="px-6 py-4 relative text-center bg-zinc-900/20">
+                  <div className="absolute top-0 left-0 right-0 h-px bg-emerald-500/20 group-hover/row:bg-emerald-500/50 transition-all"></div>
+                  <div className="flex items-center justify-center gap-2 text-zinc-400 text-xs font-bold tracking-wider italic whitespace-nowrap">
+                    <Clock className="w-3 h-3 text-emerald-500/60" />
                     {formatDate(exp.dueDate)}
                   </div>
                 </td>
-                <td className="px-10 py-8 relative text-right bg-zinc-900/20">
-                  <div className="absolute top-0 left-0 right-0 h-[1px] bg-emerald-500/40 group-hover/row:bg-emerald-500 transition-all"></div>
-                  <span className="font-black text-white text-2xl tracking-tighter group-hover/row:text-emerald-400">
+                <td className="px-6 py-4 relative text-right bg-zinc-900/20">
+                  <div className="absolute top-0 left-0 right-0 h-px bg-emerald-500/20 group-hover/row:bg-emerald-500/50 transition-all"></div>
+                  <span className="font-black text-white text-lg tracking-tight group-hover/row:text-emerald-400">
                     {formatCurrency(exp.value)}
                   </span>
                 </td>
-                <td className="px-10 py-8 relative bg-zinc-900/20 rounded-r-3xl">
-                  <div className="absolute top-0 left-0 right-0 h-[1px] bg-emerald-500/40 group-hover/row:bg-emerald-500 transition-all"></div>
-                  <div className="flex items-center justify-center gap-5">
-                    <button onClick={() => onEdit(exp)} className="p-3 bg-black border-2 border-white/5 hover:border-emerald-500 text-zinc-500 hover:text-white hover:bg-emerald-600 rounded-2xl transition-all bubble-btn">
-                      <Edit2 className="w-5 h-5" />
+                <td className="px-6 py-4 relative bg-zinc-900/20 rounded-r-2xl">
+                  <div className="absolute top-0 left-0 right-0 h-px bg-emerald-500/20 group-hover/row:bg-emerald-500/50 transition-all"></div>
+                  <div className="flex items-center justify-center gap-3">
+                    <button onClick={() => onEdit(exp)} className="p-2 bg-black border border-white/5 hover:border-emerald-500 text-zinc-500 hover:text-white hover:bg-emerald-600 rounded-xl transition-all bubble-btn">
+                      <Edit2 className="w-4 h-4" />
                     </button>
-                    <button onClick={() => onDelete(exp.id)} className="p-3 bg-black border-2 border-white/5 hover:border-red-500 text-zinc-500 hover:text-white hover:bg-red-600 rounded-2xl transition-all bubble-btn">
-                      <Trash2 className="w-5 h-5" />
+                    <button onClick={() => onDelete(exp.id)} className="p-2 bg-black border border-white/5 hover:border-red-500 text-zinc-500 hover:text-white hover:bg-red-600 rounded-xl transition-all bubble-btn">
+                      <Trash2 className="w-4 h-4" />
                     </button>
                   </div>
                 </td>
@@ -106,9 +106,9 @@ const ExpenseTable: React.FC<ExpenseTableProps> = ({ expenses, onDelete, onEdit 
       {/* Visualização para Mobile - Cards Dinâmicos */}
       <div className="block md:hidden space-y-4">
         {expenses.map((exp) => (
-          <div key={exp.id} className="glass rounded-[2rem] border-2 border-emerald-500/20 p-6 flex flex-col gap-5 shadow-xl relative overflow-hidden bubble-card">
-            <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-emerald-500/50 to-transparent"></div>
-            
+          <div key={exp.id} className="glass rounded-2xl border border-emerald-500/20 p-4 flex flex-col gap-4 shadow-lg relative overflow-hidden bubble-card">
+            <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-emerald-500/40 to-transparent"></div>
+
             <div className="flex justify-between items-start">
               <div className="flex flex-col gap-1 max-w-[70%]">
                 <span className="text-sm font-black text-white uppercase tracking-widest truncate">{exp.name}</span>
@@ -144,13 +144,13 @@ const ExpenseTable: React.FC<ExpenseTableProps> = ({ expenses, onDelete, onEdit 
             </div>
 
             <div className="flex justify-between items-center bg-black/40 p-4 rounded-2xl border border-white/5">
-               <span className="text-[9px] font-black text-zinc-500 uppercase tracking-[0.2em] flex items-center gap-2">
-                  <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></div>
-                  Montante Final
-               </span>
-               <span className="text-xl font-black text-white tracking-tighter">
-                 {formatCurrency(exp.value)}
-               </span>
+              <span className="text-[9px] font-black text-zinc-500 uppercase tracking-[0.2em] flex items-center gap-2">
+                <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></div>
+                Montante Final
+              </span>
+              <span className="text-xl font-black text-white tracking-tighter">
+                {formatCurrency(exp.value)}
+              </span>
             </div>
           </div>
         ))}
