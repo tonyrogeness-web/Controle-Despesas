@@ -10,7 +10,7 @@ import {
   ShieldCheck, FileSpreadsheet,
   Maximize2, Cpu,
   ArrowUpRight, X, CheckCircle2, Save, Wifi, WifiOff,
-  ChevronUp, ChevronDown, ArrowLeft
+  ChevronUp, ChevronDown, ArrowLeft, ArrowRight
 } from 'lucide-react';
 import {
   PieChart, Pie, Cell, ResponsiveContainer,
@@ -496,31 +496,30 @@ const App: React.FC = () => {
               <Calendar className="w-4 h-4 text-emerald-500" />
               <span className="text-[10px] md:text-xs font-bold uppercase tracking-wider text-zinc-400 italic">Período de Análise</span>
             </div>
-            <div className="flex flex-col sm:flex-row items-center gap-3">
-              <div className="relative w-full group/input">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[9px] font-black text-zinc-500 uppercase tracking-widest pointer-events-none group-focus-within/input:text-emerald-500 transition-colors">Início:</span>
-                <input
-                  id="filter-start"
-                  name="startDate"
-                  type="date"
-                  className="w-full bg-black border border-zinc-800 rounded-xl pl-14 pr-3 py-2 text-white focus:border-emerald-500 outline-none font-bold transition-all shadow-inner text-xs hover:cursor-pointer h-10"
-                  value={startDate}
-                  onChange={(e) => setStartDate(e.target.value)}
-                  onClick={(e) => e.currentTarget.showPicker()}
-                />
-              </div>
-              <div className="relative w-full group/input">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[9px] font-black text-zinc-500 uppercase tracking-widest pointer-events-none group-focus-within/input:text-emerald-500 transition-colors">Fim:</span>
-                <input
-                  id="filter-end"
-                  name="endDate"
-                  type="date"
-                  className="w-full bg-black border border-zinc-800 rounded-xl pl-10 pr-3 py-2 text-white focus:border-emerald-500 outline-none font-bold transition-all shadow-inner text-xs hover:cursor-pointer h-10"
-                  value={endDate}
-                  onChange={(e) => setEndDate(e.target.value)}
-                  onClick={(e) => e.currentTarget.showPicker()}
-                />
-              </div>
+            <div className="flex items-center gap-2 bg-black border border-zinc-800 rounded-xl px-4 py-2.5 shadow-inner hover:border-zinc-700 transition-colors w-full relative group/date-bar">
+              <input
+                id="filter-start"
+                name="startDate"
+                type="date"
+                className="w-full bg-transparent border-none text-white focus:ring-0 outline-none font-bold text-center text-xs hover:cursor-pointer p-0 uppercase tracking-wider"
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
+                onClick={(e) => e.currentTarget.showPicker()}
+              />
+
+              <ArrowRight className="w-3 h-3 text-zinc-600 group-hover/date-bar:text-emerald-500 transition-colors shrink-0" />
+
+              <input
+                id="filter-end"
+                name="endDate"
+                type="date"
+                className="w-full bg-transparent border-none text-white focus:ring-0 outline-none font-bold text-center text-xs hover:cursor-pointer p-0 uppercase tracking-wider"
+                value={endDate}
+                onChange={(e) => setEndDate(e.target.value)}
+                onClick={(e) => e.currentTarget.showPicker()}
+              />
+
+              {/* Decorative active border for focus state visualization if needed, or rely on hover */}
             </div>
           </div>
 
