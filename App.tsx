@@ -496,14 +496,30 @@ const App: React.FC = () => {
               <Calendar className="w-4 h-4 text-emerald-500" />
               <span className="text-[10px] md:text-xs font-bold uppercase tracking-wider text-zinc-400 italic">Período de Análise</span>
             </div>
-            <div className="flex flex-col sm:flex-row items-center gap-4">
-              <div className="w-full sm:flex-1 space-y-2">
-                <label htmlFor="filter-start" className="text-[9px] md:text-[10px] text-zinc-500 font-bold uppercase tracking-wider">Início</label>
-                <input id="filter-start" name="startDate" type="date" className="w-full bg-black border border-zinc-800 rounded-xl px-4 py-3 text-white focus:border-emerald-500 outline-none font-bold transition-all shadow-inner text-sm hover:cursor-pointer" value={startDate} onChange={(e) => setStartDate(e.target.value)} onClick={(e) => e.currentTarget.showPicker()} />
+            <div className="flex flex-col sm:flex-row items-center gap-3">
+              <div className="relative w-full group/input">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[9px] font-black text-zinc-500 uppercase tracking-widest pointer-events-none group-focus-within/input:text-emerald-500 transition-colors">Início:</span>
+                <input
+                  id="filter-start"
+                  name="startDate"
+                  type="date"
+                  className="w-full bg-black border border-zinc-800 rounded-xl pl-14 pr-3 py-2 text-white focus:border-emerald-500 outline-none font-bold transition-all shadow-inner text-xs hover:cursor-pointer h-10"
+                  value={startDate}
+                  onChange={(e) => setStartDate(e.target.value)}
+                  onClick={(e) => e.currentTarget.showPicker()}
+                />
               </div>
-              <div className="w-full sm:flex-1 space-y-2">
-                <label htmlFor="filter-end" className="text-[9px] md:text-[10px] text-zinc-500 font-bold uppercase tracking-wider">Fim</label>
-                <input id="filter-end" name="endDate" type="date" className="w-full bg-black border border-zinc-800 rounded-xl px-4 py-3 text-white focus:border-emerald-500 outline-none font-bold transition-all shadow-inner text-sm hover:cursor-pointer" value={endDate} onChange={(e) => setEndDate(e.target.value)} onClick={(e) => e.currentTarget.showPicker()} />
+              <div className="relative w-full group/input">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[9px] font-black text-zinc-500 uppercase tracking-widest pointer-events-none group-focus-within/input:text-emerald-500 transition-colors">Fim:</span>
+                <input
+                  id="filter-end"
+                  name="endDate"
+                  type="date"
+                  className="w-full bg-black border border-zinc-800 rounded-xl pl-10 pr-3 py-2 text-white focus:border-emerald-500 outline-none font-bold transition-all shadow-inner text-xs hover:cursor-pointer h-10"
+                  value={endDate}
+                  onChange={(e) => setEndDate(e.target.value)}
+                  onClick={(e) => e.currentTarget.showPicker()}
+                />
               </div>
             </div>
           </div>
