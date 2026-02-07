@@ -10,7 +10,7 @@ import {
   ShieldCheck, FileSpreadsheet,
   Maximize2, Cpu,
   ArrowUpRight, X, CheckCircle2, Save, Wifi, WifiOff,
-  ChevronUp, ChevronDown
+  ChevronUp, ChevronDown, ArrowLeft
 } from 'lucide-react';
 import {
   PieChart, Pie, Cell, ResponsiveContainer,
@@ -406,6 +406,13 @@ const App: React.FC = () => {
         <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-4 md:gap-6 w-full lg:w-auto justify-between lg:justify-start">
             <div className="flex items-center gap-4">
+              <button
+                onClick={() => window.location.href = 'https://controle-de-consumo.vercel.app/'}
+                className="w-10 h-10 md:w-12 md:h-12 bg-black border border-emerald-500/30 rounded-xl flex items-center justify-center group hover:bg-emerald-500/10 transition-all shadow-[0_0_10px_rgba(16,185,129,0.1)] active:scale-95 bubble-btn"
+                title="Voltar para Controle de Consumo"
+              >
+                <ArrowLeft className="w-5 h-5 md:w-6 md:h-6 text-emerald-500 group-hover:-translate-x-1 transition-transform" />
+              </button>
               <ModernLogo />
               <div>
                 <h1 className="text-lg md:text-2xl font-black text-white tracking-tighter uppercase italic leading-none">NATSUMI <span className="text-emerald-500">DATABASE</span></h1>
