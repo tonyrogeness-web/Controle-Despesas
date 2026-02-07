@@ -297,7 +297,7 @@ const App: React.FC = () => {
                     <CartesianGrid strokeDasharray="6 6" stroke="#222" vertical={false} />
                     <XAxis dataKey="name" stroke="#fff" fontSize={window.innerWidth < 768 ? 8 : 12} fontWeight="bold" />
                     <YAxis stroke="#555" fontSize={window.innerWidth < 768 ? 8 : 12} tickFormatter={(val) => `R$${val / 1000}k`} />
-                    <Tooltip cursor={false} contentStyle={{ backgroundColor: '#000', border: '1px solid rgba(16,185,129,0.3)', borderRadius: '12px' }} formatter={(value: number) => [formatCurrency(value), 'Valor']} />
+                    <Tooltip cursor={false} contentStyle={{ backgroundColor: '#000', border: '1px solid rgba(16,185,129,0.3)', borderRadius: '12px' }} formatter={(value: number | undefined) => [formatCurrency(value || 0), 'Valor']} />
                     <Bar dataKey="value" radius={[6, 6, 0, 0]} barSize={window.innerWidth < 768 ? 30 : 120}>
                       {comparisonData.map((entry, index) => <Cell key={`cell-${index}`} fill={entry.fill} />)}
                       <LabelList dataKey="value" position="top" content={(props: any) => {
@@ -623,7 +623,7 @@ const App: React.FC = () => {
                           <CartesianGrid strokeDasharray="4 4" stroke="#1a1a1a" vertical={false} />
                           <XAxis dataKey="name" stroke="#888" fontSize={10} fontWeight="bold" tick={{ fill: '#fff' }} />
                           <YAxis stroke="#555" fontSize={10} tickFormatter={(val) => `R$${val / 1000}k`} />
-                          <Tooltip cursor={false} contentStyle={{ backgroundColor: '#000', border: '1px solid rgba(16,185,129,0.3)', borderRadius: '12px' }} formatter={(value: number) => [formatCurrency(value), 'Valor']} />
+                          <Tooltip cursor={false} contentStyle={{ backgroundColor: '#000', border: '1px solid rgba(16,185,129,0.3)', borderRadius: '12px' }} formatter={(value: number | undefined) => [formatCurrency(value || 0), 'Valor']} />
                           <Bar dataKey="value" radius={[6, 6, 0, 0]} barSize={window.innerWidth < 768 ? 30 : 80}>
                             {comparisonData.map((entry, index) => <Cell key={`cell-${index}`} fill={entry.fill} />)}
                           </Bar>
